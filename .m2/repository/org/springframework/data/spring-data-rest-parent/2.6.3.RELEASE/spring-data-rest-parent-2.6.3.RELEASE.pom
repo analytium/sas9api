@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.springframework.data</groupId>
+	<artifactId>spring-data-rest-parent</artifactId>
+	<version>2.6.3.RELEASE</version>
+	<packaging>pom</packaging>
+
+	<name>Spring Data REST</name>
+
+	<parent>
+		<groupId>org.springframework.data.build</groupId>
+		<artifactId>spring-data-parent</artifactId>
+		<version>1.9.3.RELEASE</version>
+		<relativePath/>
+	</parent>
+
+	<modules>
+		<module>spring-data-rest-core</module>
+		<module>spring-data-rest-webmvc</module>
+		<module>spring-data-rest-distribution</module>
+		<module>spring-data-rest-hal-browser</module>
+	</modules>
+
+	<properties>
+		<project.type>multi</project.type>
+		<dist.id>spring-data-rest</dist.id>
+
+		<springdata.commons>1.13.3.RELEASE</springdata.commons>
+		<springdata.jpa>1.11.3.RELEASE</springdata.jpa>
+		<springdata.mongodb>1.10.3.RELEASE</springdata.mongodb>
+		<springdata.gemfire>1.9.3.RELEASE</springdata.gemfire>
+		<springdata.solr>2.1.3.RELEASE</springdata.solr>
+		<springdata.cassandra>1.5.3.RELEASE</springdata.cassandra>
+		<springdata.keyvalue>1.2.3.RELEASE</springdata.keyvalue>
+
+		<hibernate.version>4.3.10.Final</hibernate.version>
+		<jsonpath>1.1.0</jsonpath>
+		<bundlor.enabled>false</bundlor.enabled>
+		<manifest.file/>
+	</properties>
+
+	<developers>
+		<developer>
+			<id>ogierke</id>
+			<name>Oliver Gierke</name>
+			<email>ogierke at pivotal.io</email>
+			<organization>Pivotal</organization>
+			<organizationUrl>http://www.pivotal.io</organizationUrl>
+			<roles>
+				<role>Project Lead</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>gturnquist</id>
+			<name>Greg Turnquist</name>
+			<email>gturnquist at pivotal.io</email>
+			<organization>Pivotal</organization>
+			<organizationUrl>http://www.pivotal.io</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+	</developers>
+
+	<profiles>
+
+		<profile>
+
+			<id>it</id>
+
+			<modules>
+				<module>spring-data-rest-core</module>
+				<module>spring-data-rest-webmvc</module>
+				<module>spring-data-rest-distribution</module>
+				<module>spring-data-rest-hal-browser</module>
+				<module>spring-data-rest-tests</module>
+			</modules>
+
+		</profile>
+
+		<profile>
+
+			<id>release</id>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jfrog.buildinfo</groupId>
+						<artifactId>artifactory-maven-plugin</artifactId>
+						<inherited>false</inherited>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+
+	</profiles>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>${validation}</version>
+			<optional>true</optional>
+		</dependency>
+
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>spring-libs-release</id>
+			<url>https://repo.spring.io/libs-release</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-plugins-release</id>
+			<url>https://repo.spring.io/plugins-release</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>

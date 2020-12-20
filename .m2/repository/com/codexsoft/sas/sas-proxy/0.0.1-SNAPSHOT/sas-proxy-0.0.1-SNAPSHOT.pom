@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.codexsoft.sas</groupId>
+	<artifactId>sas-proxy</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>sas-proxy</name>
+	<description>SAS proxy project</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.3.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>sas</groupId>
+			<artifactId>oma.joma</artifactId>
+			<version>9.4</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/jars/sas.oma.joma.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>sas</groupId>
+			<artifactId>oma.omi</artifactId>
+			<version>9.4</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/jars/sas.oma.omi.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>sas</groupId>
+			<artifactId>security.sspi</artifactId>
+			<version>9.4</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/jars/sas.security.sspi.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>sas</groupId>
+			<artifactId>sas.svc.connection.platform</artifactId>
+			<version>9.4</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/jars/sas.svc.connection.platform.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>sas</groupId>
+			<artifactId>core</artifactId>
+			<version>9.4</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/jars/sas.core.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>sas</groupId>
+			<artifactId>oma.joma.rmt</artifactId>
+			<version>9.4</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/jars/sas.oma.joma.rmt.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>sas</groupId>
+			<artifactId>svc.connection</artifactId>
+			<version>9.4</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/jars/sas.svc.connection.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>sas</groupId>
+			<artifactId>oma.util</artifactId>
+			<version>9.4</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/jars/sas.oma.util.jar</systemPath>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/jars/log4j.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160810</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.nerdforge</groupId>
+			<artifactId>unxml</artifactId>
+			<version>0.8.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>1.5.13</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.proguard</groupId>
+			<artifactId>proguard-base</artifactId>
+			<version>5.3.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/commons-dbutils/commons-dbutils -->
+		<dependency>
+			<groupId>commons-dbutils</groupId>
+			<artifactId>commons-dbutils</artifactId>
+			<version>1.6</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.8.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+			<version>2.8.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.18</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.21.0-GA</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.wvengen</groupId>
+			<artifactId>proguard-maven-plugin</artifactId>
+			<version>2.0.14</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.re2j</groupId>
+			<artifactId>re2j</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+
+
+	</dependencies>
+
+	<!--
+	https://stackoverflow.com/questions/39024284/unable-to-get-proguard-obfuscator-and-sprint-boot-to-work-together
+	https://github.com/oleghailenko/spring-boot-obj
+	https://github.com/spring-projects/spring-boot/issues/3444
+	https://www.guardsquare.com/en/proguard/manual/examples
+	-->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12.4</version>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>jars/</classpathPrefix>
+							<mainClass>com.codexsoft.sas.SasProxyApplication</mainClass>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>jars/sas.oma.joma.jar jars/sas.oma.omi.jar jars/sas.security.sspi.jar jars/sas.svc.connection.platform.jar jars/sas.core.jar jars/sas.oma.joma.rmt.jar jars/sas.svc.connection.jar jars/sas.oma.util.jar jars/log4j.jar</Class-Path>
+						</manifestEntries>
+
+					</archive>
+				</configuration>
+			</plugin>
+
+			<!--<plugin>-->
+				<!--<groupId>com.github.wvengen</groupId>-->
+				<!--<artifactId>proguard-maven-plugin</artifactId>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<phase>package</phase>-->
+						<!--<goals>-->
+							<!--<goal>proguard</goal>-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
+				<!--<configuration>-->
+					<!--<obfuscate>true</obfuscate>-->
+					<!--<injar>${project.build.finalName}.jar</injar>-->
+					<!--<outjar>${project.build.finalName}-obfuscated.jar</outjar>-->
+					<!--<proguardInclude>${basedir}/proguard.conf</proguardInclude>-->
+
+					<!--<libs>-->
+						<!--<lib>${java.home}/lib/rt.jar</lib>-->
+						<!--<lib>${java.home}/lib/jsse.jar</lib>-->
+					<!--</libs>-->
+					<!--<addMavenDescriptor>false</addMavenDescriptor>-->
+				<!--</configuration>-->
+			<!--</plugin>-->
+		</plugins>
+	</build>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-releases</id>
+			<url>https://repo.spring.io/libs-release</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>

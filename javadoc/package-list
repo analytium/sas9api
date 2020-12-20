@@ -1,0 +1,16 @@
+com.codexsoft.sas
+com.codexsoft.sas.config
+com.codexsoft.sas.connections
+com.codexsoft.sas.connections.iom
+com.codexsoft.sas.connections.iom.models
+com.codexsoft.sas.connections.iom.parsers
+com.codexsoft.sas.connections.jdbc
+com.codexsoft.sas.connections.jdbc.dao
+com.codexsoft.sas.connections.jdbc.models
+com.codexsoft.sas.connections.workspace
+com.codexsoft.sas.connections.workspace.models
+com.codexsoft.sas.dao
+com.codexsoft.sas.models
+com.codexsoft.sas.parsers
+com.codexsoft.sas.utils
+com.codexsoft.sas.utils.functional

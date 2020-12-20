@@ -1,0 +1,56 @@
+endpoints:
+  shutdown:
+    sensitive: false
+    enabled: true
+
+logging:
+  level:
+    com.codexsoft.sas: DEBUG
+
+spring:
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+      order_map_entries_by_keys: true
+      indent_output: true
+      wrap_exceptions: true
+
+swagger:
+  # host/port to use in Swagger interface; all request from the interface will use it
+  host: user:codex123@104.198.187.78:80
+  # host: localhost:8080
+
+server:
+  # a port to launch proxy at
+  port: 8080
+
+proxy:
+  sas:
+    # Required: SASHome folder of SAS installation
+    sashome: /home/eugene/Documents/SAS/sas-libraries/SASHome
+  # Required: default workspace server name
+  default_workspace_server_name: SASApp
+  # Required: a list of metadata servers and their connection details
+  servers:
+    - # server alias name to use in endpoints that require it
+      name: test
+      # metadata server host address
+      host: sas.analytium.co.uk
+      # metadata server port
+      port: 8561
+      # list of users and credentials
+      users:
+        - # user name
+          name: sasdev
+          # user password
+          password: DevelopingSASSolutions
+        - name: sasadm
+          password: DevelopingSASSolutions
+    - name: prod
+      host: sas.analytium.co.uk
+      port: 8571
+      users:
+        - name: sasdev1
+          password: DevelopingSASSolutions
+        - name: sasadm1
+          password: Develop1ingSASSolutions

@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Jul 31 16:24:28 MSK 2019
+maven-surefire-plugin-2.12.4.jar>spring-releases=
+maven-surefire-plugin-2.12.4.pom>spring-releases=
