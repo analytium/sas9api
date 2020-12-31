@@ -48,7 +48,7 @@ public class LicenseServiceTest extends TestCase {
         expectedException.expect(Exception.class);
         expectedException.expectMessage(INVALID_LICENSE_ERROR_MESSAGE);
 
-        licenseService.checkLicense(100, 1);
+        licenseService.checkLicense(1147905, 1);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class LicenseServiceTest extends TestCase {
         expectedException.expect(Exception.class);
         expectedException.expectMessage(accessDeniedErrorMessage);
 
-        licenseService.checkLicense(100, 1);
+        licenseService.checkLicense(1147905, 1);
     }
 
     private LicenseChecker getLicenseCheckerWithValidLicense() {
