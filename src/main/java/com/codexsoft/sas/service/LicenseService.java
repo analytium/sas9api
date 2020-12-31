@@ -6,9 +6,9 @@ import com.codexsoft.sas.secure.models.LicenseCapabilities;
 import java.util.List;
 
 public interface LicenseService {
-    void checkLicense() throws Exception;
+    void checkLicense(Integer multiplier, Integer targetLevel) throws Exception;
 
-    void checkLicense(LicenseChecker licenseChecker) throws Exception;
+    void checkLicense(Integer multiplier, Integer targetLevel, LicenseChecker licenseChecker) throws Exception;
 
-    List<LicenseCapabilities> getLicenseCapabilities() throws Exception;
+    List<LicenseCapabilities> getLicenseCapabilities(Integer multiplier, Integer targetLevel) throws Exception;
 }
