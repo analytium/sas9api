@@ -6,6 +6,7 @@ import com.codexsoft.sas.connections.iom.parsers.ServerComponentParser;
 import com.codexsoft.sas.dao.BaseDao;
 import com.sas.meta.SASOMI.IOMI;
 import com.sas.metadata.MetadataUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.omg.CORBA.StringHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Component
 @Scope("prototype")
+@Slf4j
 public class ServersDao extends BaseDao {
     static final String PUBLIC_TYPE_WORKSPACE = "LogicalServer.Workspace";
     static final String PUBLIC_TYPE_STORED_PROCESS = "LogicalServer.StoredProcess";
@@ -74,7 +76,12 @@ public class ServersDao extends BaseDao {
         return serverComponents.stream()
                 .filter((serverComponent) -> serverComponent.getName().equalsIgnoreCase(name))
                 .findFirst()
-                .orElseThrow(() -> new Exception("No server with name '" + name + "' found"));
+                .orElseThrow(() -> getServerNotFoundException(name));
+    }
+
+    private Exception getServerNotFoundException(String name) {
+        log.error("No server with name '{}' found", name);
+        return new Exception("No server with name '" + name + "' found");
     }
 
     public List<ServerComponent> getWorkspaceServers(String repositoryId) throws Exception {
