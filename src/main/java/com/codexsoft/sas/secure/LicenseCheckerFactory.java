@@ -5,6 +5,7 @@ import com.codexsoft.sas.connections.ConnectionProperties;
 import com.codexsoft.sas.secure.sas.DateChecker;
 import com.codexsoft.sas.secure.sas.SiteNumberChecker;
 import com.google.common.io.ByteStreams;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -20,22 +21,24 @@ import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
 @Scope("singleton")
+@Slf4j
 public class LicenseCheckerFactory {
     private static final String PUBLIC_KEY_RESOURCE = "keys/public_key.der";
     private static final String LICENSE_FOLDER = "license";
     private static final String LICENSE_EXTENSION = ".dat";
+    private static final String LICENSE_FILE_NOT_FOUND_ERROR = "no license file was found";
 
     private ApplicationContext context;
     private LicenseChecker licenseChecker;
     private LocalDateTime licenseCheckerNextCheck;
 
-    public LicenseCheckerFactory(ApplicationContext context) throws Exception {
+    public LicenseCheckerFactory(ApplicationContext context) {
         this.context = context;
         this.licenseChecker = createLicenseChecker();
         this.licenseCheckerNextCheck = LocalDateTime.now().plusDays(1);
@@ -43,6 +46,7 @@ public class LicenseCheckerFactory {
 
     private LicenseChecker createLicenseChecker() {
         int capabilities = 35830272; // 0b10001000101011101000000000 - empty license
+        String errors = null;
         try {
             ProxyConfigModel proxyConfig = context.getBean(ProxyConfigModel.class);
             ConnectionProperties iomConnectionProps = proxyConfig.getConnection();           
@@ -55,8 +59,9 @@ public class LicenseCheckerFactory {
             capabilities = getAccumulatedLicense(licenseFiles, reader, siteNumber, date);     
         } catch (Exception e) {
             capabilities *= 287479809; // 0b10001001000101001100000000001 - preserves lower 10 bits
+            errors = e.getMessage();
         }
-        return new LicenseChecker(capabilities);
+        return new LicenseChecker(capabilities, errors);
     }
 
     public LicenseChecker getLicenseChecker() {
@@ -84,13 +89,16 @@ public class LicenseCheckerFactory {
 
     private List<File> getLicenseFiles(String path) throws Exception {
         try (Stream<Path> paths = Files.walk(Paths.get(path))) {
-            List<File> licenseFiles = new ArrayList<File>();
-            paths.forEach(file -> {
-                File item = file.toFile();
-                if (item.isFile() && item.getName().endsWith(LICENSE_EXTENSION)) {
-                    licenseFiles.add(item);
-                }
-            });
+            List<File> licenseFiles = paths
+                    .map(Path::toFile)
+                    .filter(item -> item.isFile() && item.getName().endsWith(LICENSE_EXTENSION))
+                    .collect(Collectors.toList());
+
+            if (licenseFiles.isEmpty()) {
+                log.error("Error: {}", LICENSE_FILE_NOT_FOUND_ERROR);
+                throw new Exception(LICENSE_FILE_NOT_FOUND_ERROR);
+            }
+
             return licenseFiles;
         }
     }
