@@ -19,7 +19,13 @@ import java.util.List;
 @Scope("prototype")
 public class DataSetDao extends BaseDao {
 
-    public List<DataSet> getDatasets(@NotNull String libraryName, JDBCConnection jdbcConnection) throws Exception {
+    private JDBCConnection jdbcConnection;
+
+    public DataSetDao(JDBCConnection jdbcConnection) {
+        this.jdbcConnection = jdbcConnection;
+    }
+
+    public List<DataSet> getDatasets(@NotNull String libraryName) throws Exception {
         Connection connection = jdbcConnection.getConnection();
 
         String queryString = ""
@@ -40,8 +46,8 @@ public class DataSetDao extends BaseDao {
         }
     }
 
-    public DataSet getDatasetByName(String libraryName, String datasetName, JDBCConnection jdbcConnection) throws Exception {
-        List<DataSet> datasets = getDatasets(libraryName, jdbcConnection);
+    public DataSet getDatasetByName(String libraryName, String datasetName) throws Exception {
+        List<DataSet> datasets = getDatasets(libraryName);
 
         return datasets.stream()
                 .filter((dataset) -> dataset.getName().equalsIgnoreCase(datasetName))
@@ -49,7 +55,7 @@ public class DataSetDao extends BaseDao {
                 .orElseThrow(() -> new Exception("Dataset '" + datasetName + "' was not found"));
     }
 
-    public int deleteDataset(String libraryName, String datasetName, JDBCConnection jdbcConnection) throws Exception {
+    public int deleteDataset(String libraryName, String datasetName) throws Exception {
         Connection connection = jdbcConnection.getConnection();
 
         String dropQuery = String.format(

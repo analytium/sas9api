@@ -27,6 +27,12 @@ public class DataSetDataDao {
     public static int MAX_FETCH_SIZE = 10000;
     private static final String OPTIONS_COMMAND = "options VALIDVARNAME = ANY VALIDMEMNAME = EXTEND;";
 
+    private JDBCConnection jdbcConnection;
+
+    public DataSetDataDao(JDBCConnection jdbcConnection) {
+        this.jdbcConnection = jdbcConnection;
+    }
+
     private Class checkTypeConsistency(List<Object> objects) throws Exception {
         Class firstObjectClass = objects.get(0).getClass();
         boolean match = objects.stream()
@@ -43,8 +49,7 @@ public class DataSetDataDao {
             @NotNull String datasetName,
             Map<String, Object> filter,
             int limit,
-            int offset,
-            JDBCConnection jdbcConnection
+            int offset
     ) throws Exception {
         WorkspaceConnection workspaceConnection = jdbcConnection.getWorkspaceConnection();
         workspaceConnection.submitSasCommand(OPTIONS_COMMAND, false);
@@ -99,8 +104,7 @@ public class DataSetDataDao {
 
     public int deleteDataAll(
             @NotNull String libraryName,
-            @NotNull String datasetName,
-            JDBCConnection jdbcConnection
+            @NotNull String datasetName
     ) throws Exception {
         Connection connection = jdbcConnection.getConnection();
 
@@ -119,8 +123,7 @@ public class DataSetDataDao {
             @NotNull String libraryName,
             @NotNull String datasetName,
             @NotNull List<Map<String, Object>> data,
-            @NotNull String byKey,
-            JDBCConnection jdbcConnection
+            @NotNull String byKey
     ) throws Exception {
         Connection connection = jdbcConnection.getConnection();
 
@@ -150,8 +153,7 @@ public class DataSetDataDao {
     public int insertData(
             @NotNull String libraryName,
             @NotNull String datasetName,
-            @NotNull List<Map<String, Object>> data,
-            JDBCConnection jdbcConnection
+            @NotNull List<Map<String, Object>> data
     ) throws Exception {
         Connection connection = jdbcConnection.getConnection();
 
@@ -192,14 +194,13 @@ public class DataSetDataDao {
             @NotNull String libraryName,
             @NotNull String datasetName,
             @NotNull List<Map<String, Object>> data,
-            String byKey,
-            JDBCConnection jdbcConnection
+            String byKey
     ) throws Exception {
         int deletedCount = 0;
         if (byKey != null && byKey.length() > 0) {
-            deletedCount = deleteData(libraryName, datasetName, data, byKey, jdbcConnection);
+            deletedCount = deleteData(libraryName, datasetName, data, byKey);
         }
-        int insertedCount = insertData(libraryName, datasetName, data, jdbcConnection);
+        int insertedCount = insertData(libraryName, datasetName, data);
         return new int[] { insertedCount, deletedCount };
     }
 
@@ -207,11 +208,10 @@ public class DataSetDataDao {
     public int[] replaceDataAll(
             @NotNull String libraryName,
             @NotNull String datasetName,
-            @NotNull List<Map<String, Object>> data,
-            JDBCConnection jdbcConnection
+            @NotNull List<Map<String, Object>> data
     ) throws Exception {
-        int deletedCount = deleteDataAll(libraryName, datasetName, jdbcConnection);
-        int insertedCount = insertData(libraryName, datasetName, data, jdbcConnection);
+        int deletedCount = deleteDataAll(libraryName, datasetName);
+        int insertedCount = insertData(libraryName, datasetName, data);
         return new int[] { insertedCount, deletedCount };
     }
  }

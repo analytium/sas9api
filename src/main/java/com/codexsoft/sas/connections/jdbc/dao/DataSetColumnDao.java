@@ -17,11 +17,15 @@ import java.util.List;
 @Service(value = "DataSetColumnDao")
 @Scope("prototype")
 public class DataSetColumnDao extends BaseDao {
+    private JDBCConnection jdbcConnection;
+
+    public DataSetColumnDao(JDBCConnection jdbcConnection) {
+        this.jdbcConnection = jdbcConnection;
+    }
 
     public List<DataSetColumn> getDatasetColumns(
             @NotNull String libraryName,
-            @NotNull String datasetName,
-            JDBCConnection jdbcConnection
+            @NotNull String datasetName
     ) throws Exception {
         Connection connection = jdbcConnection.getConnection();
 
