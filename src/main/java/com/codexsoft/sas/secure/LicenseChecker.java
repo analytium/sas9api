@@ -1,10 +1,12 @@
 package com.codexsoft.sas.secure;
 
 import com.codexsoft.sas.secure.models.LicenseCapabilities;
+import lombok.Builder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 public class LicenseChecker {
 
     private static final int[] Mod37BitPosition = {
@@ -14,9 +16,11 @@ public class LicenseChecker {
     };
 
     private int capabilities;
+    private String errors;
 
-    public LicenseChecker(int capabilities) {
+    public LicenseChecker(int capabilities, String errors) {
         this.capabilities = capabilities;
+        this.errors = errors;
     }
 
     // the function just does this
@@ -77,5 +81,9 @@ public class LicenseChecker {
             v *= 2;
         }
         return licenseCapabilities;
+    }
+
+    public String getErrors() {
+        return errors;
     }
 }

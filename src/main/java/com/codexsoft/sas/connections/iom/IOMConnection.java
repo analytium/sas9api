@@ -5,8 +5,7 @@ import com.sas.meta.SASOMI.IOMI;
 import com.sas.meta.SASOMI.ISecurity;
 import com.sas.meta.SASOMI.ISecurityAdmin;
 import com.sas.metadata.remote.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +14,10 @@ import java.rmi.RemoteException;
 
 @Component
 @Scope("prototype")
+@Slf4j
 public class IOMConnection implements AutoCloseable {
 
-    @Autowired
-    private ApplicationContext context;
-
-    private ConnectionProperties connection;
+    private final ConnectionProperties connection;
 
     public IOMConnection(ConnectionProperties connection) {
         this.connection = connection;
@@ -40,6 +37,8 @@ public class IOMConnection implements AutoCloseable {
                         connection.getPassword()
                 );
             } catch (MdException e) {
+                log.error("Error occurred while connecting to SAS: {}", e.getMessage(), e);
+
                 Throwable t = e.getCause();
                 if (t == null) {
                     String ErrorType = e.getSASMessageSeverity();

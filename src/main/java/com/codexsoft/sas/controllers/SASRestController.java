@@ -24,17 +24,15 @@ import com.codexsoft.sas.connections.workspace.models.SASLanguageResponse;
 import com.codexsoft.sas.models.APIResponse;
 import com.codexsoft.sas.models.LibraryParams;
 import com.codexsoft.sas.models.ServerConfiguration;
-import com.codexsoft.sas.secure.LicenseCheckerFactory;
 import com.codexsoft.sas.secure.models.LicenseCapabilities;
+import com.codexsoft.sas.service.LicenseService;
 import com.codexsoft.sas.utils.ResponseUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,14 +47,18 @@ import java.util.Map;
 @RestController
 @RequestMapping("/sas")
 @Api(value = "SAS", description = "Endpoint for SAS server")
+@Slf4j
 public class SASRestController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ApplicationContext context;
+    private final ApplicationContext context;
+    private final ConnectionHelpers connectionHelpers;
+    private final LicenseService licenseService;
 
-    @Autowired
-    private ConnectionHelpers connectionHelpers;
+    public SASRestController(ApplicationContext context, ConnectionHelpers connectionHelpers, LicenseService licenseService) {
+        this.context = context;
+        this.connectionHelpers = connectionHelpers;
+        this.licenseService = licenseService;
+    }
 
     private ConnectionProperties getConnectionProperties(HttpServletRequest request) throws Exception {
         ProxyConfigModel proxyConfig = context.getBean(ProxyConfigModel.class);
@@ -68,13 +70,10 @@ public class SASRestController {
     // TODO: list all configured servers instead of passed one
     @ApiOperation(value = "Gets current server connection configuration and its repositories")
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity<APIResponse<ServerConfiguration>> sasMetadataInfo(
-            HttpServletRequest request
-    ) {
+    public ResponseEntity<APIResponse<ServerConfiguration>> sasMetadataInfo(HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(1147905, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(1147905, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (val connection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, connection);
@@ -96,9 +95,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (val connection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, connection);
@@ -120,9 +118,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (val connection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, connection);
@@ -154,9 +151,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
                     connectionProperties, serverName, repositoryName
@@ -180,9 +176,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
                     connectionProperties, serverUrl, serverPort
@@ -216,9 +211,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
                     connectionProperties, serverName, repositoryName
@@ -242,9 +236,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
                     connectionProperties, serverUrl, serverPort
@@ -281,9 +274,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
                     connectionProperties, serverName, repositoryName
@@ -307,9 +299,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
                     connectionProperties, serverUrl, serverPort
@@ -355,9 +346,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
                     connectionProperties, serverName, repositoryName
@@ -384,9 +374,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
                     connectionProperties, serverUrl, serverPort
@@ -447,9 +436,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
                     connectionProperties, serverName, repositoryName
@@ -485,9 +473,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
                     connectionProperties, serverUrl, serverPort
@@ -536,9 +523,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
                     connectionProperties, serverName, repositoryName
@@ -570,9 +556,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
                     connectionProperties, serverUrl, serverPort
@@ -616,9 +601,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
                     connectionProperties, serverUrl, serverPort
@@ -647,9 +631,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
                     connectionProperties, serverName, repositoryName
@@ -690,9 +673,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
                     connectionProperties, serverUrl, serverPort
@@ -719,9 +701,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
                     connectionProperties, serverName, repositoryName
@@ -752,9 +733,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -776,9 +756,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 return getUserByName(iomConnection, repositoryName, userName);
@@ -794,9 +773,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 return getUserByName(iomConnection, repositoryName, connectionProperties.getUserName());
@@ -814,9 +792,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -838,9 +815,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -861,9 +837,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -885,9 +860,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -908,9 +882,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+           licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -932,9 +905,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(201729, 1)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(201729, 1);
+
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -974,9 +946,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -1011,9 +982,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -1047,9 +1017,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             ConnectionProperties workspaceConnectionProps = connectionHelpers.getWorkspaceConnectionPropsByServerName(
                     connectionProperties,
@@ -1079,9 +1048,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             ConnectionProperties workspaceConnectionProps = connectionHelpers.getWorkspaceConnectionPropsByHost(
                     connectionProperties,
@@ -1109,9 +1077,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(17256449, 2)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(17256449, 2);
+
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = new  IOMConnection(connectionProperties)) {
                 val permissionsDao = context.getBean(PermissionsDao.class, iomConnection);
@@ -1167,9 +1134,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(5325825, 3)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(5325825, 3);
+
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoryDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -1235,10 +1201,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(5325825, 3)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
-            
+            licenseService.checkLicense(5325825, 3);
+
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -1265,9 +1229,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(5325825, 3)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(5325825, 3);
+
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -1296,9 +1259,8 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            if (!context.getBean(LicenseCheckerFactory.class).getLicenseChecker().check(5325825, 3)) {
-                throw new Exception("The endpoint is not available for use with current license");
-            }
+            licenseService.checkLicense(5325825, 3);
+
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
@@ -1313,12 +1275,9 @@ public class SASRestController {
     //////////// License endpoint /////////////////
     @ApiOperation(value = "Get information about active SAS Proxy license")
     @RequestMapping(value = "/license", method = RequestMethod.GET)
-    public ResponseEntity<APIResponse<List<LicenseCapabilities>>> getLicense(
-
-    ) {
-        return ResponseUtils.withResponse(() -> {
-            return context.getBean(LicenseCheckerFactory.class).getLicenseChecker().getCapabilities();
-        });
+    public ResponseEntity<APIResponse<List<LicenseCapabilities>>> getLicense() {
+        return ResponseUtils.withResponse(() ->
+                licenseService.getLicenseCapabilities(1147905, 1));
     }
 }
 

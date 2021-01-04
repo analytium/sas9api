@@ -2,7 +2,6 @@ package com.codexsoft.sas.config.models;
 
 import com.codexsoft.sas.connections.ConnectionProperties;
 import lombok.Data;
-import lombok.val;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
