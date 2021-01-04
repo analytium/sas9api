@@ -41,7 +41,7 @@ public class SasProxyApplicationTests {
 	private WebApplicationContext webApplicationContext;
 
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
 		this.mockMvc = webAppContextSetup(webApplicationContext).build();
 	}
 

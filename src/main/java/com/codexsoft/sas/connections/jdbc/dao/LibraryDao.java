@@ -16,7 +16,13 @@ import java.util.List;
 @Scope("prototype")
 public class LibraryDao extends BaseDao {
 
-    public List<Library> getLibraries(JDBCConnection jdbcConnection) throws Exception {
+    private JDBCConnection jdbcConnection;
+
+    public LibraryDao(JDBCConnection jdbcConnection) {
+        this.jdbcConnection = jdbcConnection;
+    }
+
+    public List<Library> getLibraries() throws Exception {
         Connection connection = jdbcConnection.getConnection();
 
         String queryString = ""
@@ -34,8 +40,9 @@ public class LibraryDao extends BaseDao {
         }
     }
 
-    public Library getLibraryByName(String libraryName, JDBCConnection jdbcConnection) throws Exception {
-        List<Library> libraries = getLibraries(jdbcConnection);
+
+    public Library getLibraryByName(String libraryName) throws Exception {
+        List<Library> libraries = getLibraries();
         return libraries.stream()
                 .filter((library) -> library.getLibname().equalsIgnoreCase(libraryName))
                 .findFirst()
