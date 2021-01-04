@@ -6,8 +6,6 @@ import com.sas.meta.SASOMI.ISecurity;
 import com.sas.meta.SASOMI.ISecurityAdmin;
 import com.sas.metadata.remote.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
