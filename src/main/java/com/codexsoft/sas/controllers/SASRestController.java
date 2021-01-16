@@ -69,7 +69,7 @@ public class SASRestController {
 
     // TODO: list all configured servers instead of passed one
     @ApiOperation(value = "Gets current server connection configuration and its repositories")
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping()
     public ResponseEntity<APIResponse<ServerConfiguration>> sasMetadataInfo(HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
             licenseService.checkLicense(1147905, 1);
@@ -88,7 +88,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Gets list of available Workspace servers and their connections from metadata server")
-    @RequestMapping(value = "/servers", method = RequestMethod.GET)
+    @GetMapping(value = "/servers")
     public ResponseEntity<APIResponse<List<ServerComponent>>> getWorkspaceServers(
             @ApiParam(value = "Repository name", defaultValue = "Foundation")
             @RequestParam(value = "repositoryName", required = false) String repositoryName,
@@ -108,7 +108,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Gets Workspace server information and its connections from metadata server by name")
-    @RequestMapping(value = "/servers/{serverName}", method = RequestMethod.GET)
+    @GetMapping(value = "/servers/{serverName}")
     public ResponseEntity<APIResponse<ServerComponent>> getServer(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -141,7 +141,7 @@ public class SASRestController {
             value = "Gets list of available libraries for workspace server by server name",
             notes = "Uses first available connection from connection list for supplied server name. Note: the method doesn't populate ID field in Libraries object"
     )
-    @RequestMapping(value = "/servers/{serverName}/libraries", method = RequestMethod.GET)
+    @GetMapping(value = "/servers/{serverName}/libraries")
     public ResponseEntity<APIResponse<List<Library>>> getLibrariesByServer(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -166,7 +166,7 @@ public class SASRestController {
             value = "Get list of libraries for workspace server using direct connection information",
             notes = "Note: the method doesn't populate ID field in Libraries object"
     )
-    @RequestMapping(value = "/libraries", method = RequestMethod.GET)
+    @GetMapping(value = "/libraries")
     public ResponseEntity<APIResponse<List<Library>>> getLibraries(
             @ApiParam(value = "Workspace server host URL")
             @RequestParam(value = "serverUrl", required = false) String serverUrl,
@@ -198,7 +198,7 @@ public class SASRestController {
             value = "Gets library information for workspace server by library name and server name",
             notes = "Uses first available connection from connection list for supplied server name"
     )
-    @RequestMapping(value = "/servers/{serverName}/libraries/{libraryName}", method = RequestMethod.GET)
+    @GetMapping(value = "/servers/{serverName}/libraries/{libraryName}")
     public ResponseEntity<APIResponse<Library>> getLibraryByServer(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -223,7 +223,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Gets library information for workspace server by library name using direct connection information")
-    @RequestMapping(value = "/libraries/{libraryName}", method = RequestMethod.GET)
+    @GetMapping(value = "/libraries/{libraryName}")
     public ResponseEntity<APIResponse<Library>> getLibrary(
             @ApiParam(value = "Library name")
             @PathVariable String libraryName,
@@ -261,7 +261,7 @@ public class SASRestController {
             notes = "Uses first available connection from connection list for supplied server name. "
                   + "This method doesn't populate 'columns' field in response items. Use a method for specific dataset to get it populated."
     )
-    @RequestMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets", method = RequestMethod.GET)
+    @GetMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets")
     public ResponseEntity<APIResponse<List<DataSet>>> getDatasetsByServer(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -286,7 +286,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Gets list of datasets for specific library by library name using direct connection information")
-    @RequestMapping(value = "/libraries/{libraryName}/datasets", method = RequestMethod.GET)
+    @GetMapping(value = "/libraries/{libraryName}/datasets")
     public ResponseEntity<APIResponse<List<DataSet>>> getDatasets(
             @ApiParam(value = "Library name")
             @PathVariable String libraryName,
@@ -330,7 +330,7 @@ public class SASRestController {
             value = "Gets dataset information for specific dataset by dataset name, library name and server name",
             notes = "Uses first available connection from connection list for supplied server name"
     )
-    @RequestMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}", method = RequestMethod.GET)
+    @GetMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}")
     public ResponseEntity<APIResponse<DataSet>> getDatasetDetailsByServer(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -358,7 +358,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Gets dataset information for specific dataset by dataset name and library name using direct connection information")
-    @RequestMapping(value = "/libraries/{libraryName}/datasets/{datasetName}", method = RequestMethod.GET)
+    @GetMapping(value = "/libraries/{libraryName}/datasets/{datasetName}")
     public ResponseEntity<APIResponse<DataSet>> getDatasetDetails(
             @ApiParam(value = "Library name")
             @PathVariable String libraryName,
@@ -411,7 +411,7 @@ public class SASRestController {
             value = "Retrieves data from dataset by dataset name, library name and server name",
             notes = "Uses first available connection from connection list for supplied server name"
     )
-    @RequestMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}/data", method = RequestMethod.GET)
+    @GetMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<List<Map<String, Object>>>> getDatasetDataByServer(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -448,7 +448,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Retrieves data from dataset by dataset name and library name using direct connection information")
-    @RequestMapping(value = "/libraries/{libraryName}/datasets/{datasetName}/data", method = RequestMethod.GET)
+    @GetMapping(value = "/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<List<Map<String, Object>>>> getDatasetData(
             @ApiParam(value = "Library name")
             @PathVariable String libraryName,
@@ -502,7 +502,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Insert or replaces data into dataset by key")
-    @RequestMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}/data", method = RequestMethod.PUT)
+    @PutMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<DMLResponse>> putDataSetDataByServer(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -535,7 +535,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Insert or replaces data into dataset by key")
-    @RequestMapping(value = "/libraries/{libraryName}/datasets/{datasetName}/data", method = RequestMethod.PUT)
+    @PutMapping(value = "/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<DMLResponse>> putDataSetData(
             @ApiParam(value = "Library name")
             @PathVariable String libraryName,
@@ -583,7 +583,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Replaces all data in dataset with input data")
-    @RequestMapping(value = "/libraries/{libraryName}/datasets/{datasetName}/data", method = RequestMethod.POST)
+    @PostMapping(value = "/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<DMLResponse>> postDataSetData(
             @ApiParam(value = "Library name")
             @PathVariable String libraryName,
@@ -613,7 +613,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Replaces all data in dataset with input data")
-    @RequestMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}/data", method = RequestMethod.POST)
+    @PostMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<DMLResponse>> postDataSetDataByServer(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -657,7 +657,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Deletes dataset from library")
-    @RequestMapping(value = "/libraries/{libraryName}/datasets/{datasetName}/data", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<DMLResponse>> deleteDataset(
             @ApiParam(value = "Library name")
             @PathVariable String libraryName,
@@ -685,7 +685,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Deletes dataset from library")
-    @RequestMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}/data", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<DMLResponse>> deleteDatasetByServer(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -726,7 +726,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Gets server users and its identities")
-    @RequestMapping(value = "/meta/users", method = RequestMethod.GET)
+    @GetMapping(value = "/meta/users")
     public ResponseEntity<APIResponse<List<Person>>> getUsers(
             @ApiParam(value = "Repository name", defaultValue = "Foundation")
             @RequestParam(value = "repositoryName", required = false) String repositoryName,
@@ -746,7 +746,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Gets server user and its identities by name")
-    @RequestMapping(value = "/meta/users/{userName}", method = RequestMethod.GET)
+    @GetMapping(value = "/meta/users/{userName}")
     public ResponseEntity<APIResponse<Person>> getUserByName(
             @ApiParam("User name to search")
             @PathVariable String userName,
@@ -766,7 +766,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Gets configured user information and its identities")
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    @GetMapping(value = "/user")
     public ResponseEntity<APIResponse<Person>> getCurrentUser(
             @ApiParam(value = "Repository name", defaultValue = "Foundation")
             @RequestParam(value = "repositoryName", required = false) String repositoryName,
@@ -785,7 +785,7 @@ public class SASRestController {
     // IdentityGroups
 
     @ApiOperation(value = "Get groups and their associated groups and users")
-    @RequestMapping(value = "/meta/groups", method = RequestMethod.GET)
+    @GetMapping(value = "/meta/groups")
     public ResponseEntity<APIResponse<List<IdentityGroup>>> getGroups(
             @ApiParam(value = "Repository name", defaultValue = "Foundation")
             @RequestParam(value = "repositoryName", required = false) String repositoryName,
@@ -805,7 +805,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Get group and its associated groups and users by group name")
-    @RequestMapping(value = "/meta/groups/{groupName}", method = RequestMethod.GET)
+    @GetMapping(value = "/meta/groups/{groupName}")
     public ResponseEntity<APIResponse<IdentityGroup>> getGroupByName(
             @ApiParam("Group name to search")
             @PathVariable String groupName,
@@ -830,7 +830,7 @@ public class SASRestController {
     // Roles
 
     @ApiOperation(value = "Get roles and their associated groups and users")
-    @RequestMapping(value = "/meta/roles", method = RequestMethod.GET)
+    @GetMapping(value = "/meta/roles")
     public ResponseEntity<APIResponse<List<IdentityGroup>>> getRoles(
             @ApiParam(value = "Repository name", defaultValue = "Foundation")
             @RequestParam(value = "repositoryName", required = false) String repositoryName,
@@ -850,7 +850,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Get roles and its associated groups and users by role name")
-    @RequestMapping(value = "/meta/roles/{roleName}", method = RequestMethod.GET)
+    @GetMapping(value = "/meta/roles/{roleName}")
     public ResponseEntity<APIResponse<IdentityGroup>> getRoleByName(
             @ApiParam("Role name to search")
             @PathVariable String roleName,
@@ -875,7 +875,7 @@ public class SASRestController {
     // Stored Process Server
 
     @ApiOperation(value = "Gets list of available Stored Process servers and their connections from metadata server")
-    @RequestMapping(value = "/stp", method = RequestMethod.GET)
+    @GetMapping(value = "/stp")
     public ResponseEntity<APIResponse<List<ServerComponent>>> getSTPServers(
             @ApiParam(value = "Repository name", defaultValue = "Foundation")
             @RequestParam(value = "repositoryName", required = false) String repositoryName,
@@ -895,7 +895,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Gets Stored Process server information and its connections from metadata server by name")
-    @RequestMapping(value = "/stp/{serverName}", method = RequestMethod.GET)
+    @GetMapping(value = "/stp/{serverName}")
     public ResponseEntity<APIResponse<ServerComponent>> getSTPServer(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -918,7 +918,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Creates a library at given server with given library name and parameters")
-    @RequestMapping(value = "/servers/{serverName}/libraries/{libraryName}", method = RequestMethod.POST)
+    @PostMapping(value = "/servers/{serverName}/libraries/{libraryName}")
     public ResponseEntity<APIResponse<Library>> createLibrary(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -969,7 +969,7 @@ public class SASRestController {
     
 
     @ApiOperation(value = "Removes all libraries with matching library name")
-    @RequestMapping(value = "/servers/{serverName}/libraries/{libraryName}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/servers/{serverName}/libraries/{libraryName}")
     public ResponseEntity<APIResponse<Object>> deleteLibrary(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -1001,7 +1001,7 @@ public class SASRestController {
             value = "Gets list of available libraries for workspace server by server name",
             notes = "Uses first available connection from connection list for supplied server name"
     )
-    @RequestMapping(value = "/servers/{serverName}/cmd", method = RequestMethod.PUT)
+    @PutMapping(value = "/servers/{serverName}/cmd")
     public ResponseEntity<APIResponse<SASLanguageResponse>> putCommandByServer(
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
@@ -1032,7 +1032,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Send a SAS command for execution to workspace server")
-    @RequestMapping(value = "/cmd", method = RequestMethod.PUT)
+    @PutMapping(value = "/cmd")
     public ResponseEntity<APIResponse<SASLanguageResponse>> putCommand(
             @ApiParam(value = "Workspace server host URL")
             @RequestParam(value = "serverUrl", required = false) String serverUrl,
@@ -1065,7 +1065,7 @@ public class SASRestController {
     // Permissions - test endpoint
 
     @ApiOperation(value = "Get object permissions")
-    @RequestMapping(value = "/meta/permissions", method = RequestMethod.GET)
+    @GetMapping(value = "/meta/permissions")
     public ResponseEntity<APIResponse<List<Permission>>> getPermissions(
             @ApiParam(value = "SAS metadata object type")
             @RequestParam
@@ -1089,7 +1089,7 @@ public class SASRestController {
 
     // Search endpoint
     @ApiOperation(value = "Find objects")
-    @RequestMapping(value = "/meta/search", method = RequestMethod.GET)
+    @GetMapping(value = "/meta/search")
     public ResponseEntity<APIResponse<List<SASDetailedObject>>> findObjects(
             @ApiParam(value = "Repository name", defaultValue = "Foundation")
             @RequestParam(required = false) String repositoryName,
@@ -1186,7 +1186,7 @@ public class SASRestController {
     ////////////////////// Object operations ////////////////////////
 
     @ApiOperation(value = "Move object between folders")
-    @RequestMapping(value = "/meta/objects/move", method = RequestMethod.POST)
+    @PostMapping(value = "/meta/objects/move")
     public ResponseEntity<APIResponse<Object>> moveObject(
             @ApiParam(value = "Source folder location")
             @RequestParam String sourceLocation,
@@ -1216,7 +1216,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Delete object by folder and name")
-    @RequestMapping(value = "/meta/objects/delete", method = RequestMethod.POST)
+    @PostMapping(value = "/meta/objects/delete")
     public ResponseEntity<APIResponse<Object>> deleteObject(
             @ApiParam(value = "Folder location")
             @RequestParam String sourceLocation,
@@ -1244,7 +1244,7 @@ public class SASRestController {
     }
 
     @ApiOperation(value = "Copy object between folders")
-    @RequestMapping(value = "/meta/objects/copy", method = RequestMethod.POST)
+    @PostMapping(value = "/meta/objects/copy")
     public ResponseEntity<APIResponse<Object>> copyObject(
             @ApiParam(value = "Source folder location")
             @RequestParam String sourceLocation,
@@ -1274,7 +1274,7 @@ public class SASRestController {
 
     //////////// License endpoint /////////////////
     @ApiOperation(value = "Get information about active SAS Proxy license")
-    @RequestMapping(value = "/license", method = RequestMethod.GET)
+    @GetMapping(value = "/license")
     public ResponseEntity<APIResponse<List<LicenseCapabilities>>> getLicense() {
         return ResponseUtils.withResponse(() ->
                 licenseService.getLicenseCapabilities(1147905, 1));
