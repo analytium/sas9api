@@ -16,23 +16,25 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class ApiKeyRequestInterceptor extends HandlerInterceptorAdapter {
     private final ProxyConfigModel proxyConfigModel;
+    public static final String INVALID_API_KEY_ERROR_MESSAGE = "Invalid api key";
 
     public ApiKeyRequestInterceptor(ProxyConfigModel proxyConfigModel) {
         this.proxyConfigModel = proxyConfigModel;
     }
 
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String passedKey = request.getHeader("apiKey");
-        String apiKey = getConnectionProperties(request).getKey();
+        final ConnectionProperties connectionProperties = getConnectionProperties(request);
+        final String apiKey = connectionProperties.getKey();
+        final boolean apikeyEnabled = connectionProperties.isApikeyEnabled();
 
-        if(!StringUtils.hasLength(passedKey) || !apiKey.equals(passedKey)){
-            log.error("Invalid api key");
+        if(apikeyEnabled && (!StringUtils.hasLength(passedKey) || !apiKey.equals(passedKey))){
+            log.error(INVALID_API_KEY_ERROR_MESSAGE);
 
-            APIResponse<String> payload = new APIResponse<>();
+            final APIResponse<String> payload = new APIResponse<>();
             payload.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            payload.setError("Invalid api key");
+            payload.setError(INVALID_API_KEY_ERROR_MESSAGE);
 
             String jsonResponse = new ObjectMapper().writeValueAsString(payload);
 
@@ -45,7 +47,7 @@ public class ApiKeyRequestInterceptor extends HandlerInterceptorAdapter {
             response.getWriter().write(jsonResponse);
             return false;
         }
-        return  true;
+        return true;
     }
 
     private ConnectionProperties getConnectionProperties(HttpServletRequest request) throws Exception {

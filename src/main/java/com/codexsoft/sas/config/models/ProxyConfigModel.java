@@ -44,7 +44,8 @@ public class ProxyConfigModel {
                 server.getPort(),
                 user.getName(),
                 user.getPassword(),
-                user.getKey()
+                user.getKey(),
+                server.isApikeyEnabled()
         );
     }
 }

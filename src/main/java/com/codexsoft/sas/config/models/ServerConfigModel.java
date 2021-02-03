@@ -10,6 +10,7 @@ public class ServerConfigModel {
     private String host;
     private int port;
     private List<UsersConfigModel> users;
+    private boolean apikeyEnabled;
 
     @Data
     public static class UsersConfigModel {
