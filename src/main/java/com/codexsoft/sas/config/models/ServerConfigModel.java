@@ -15,6 +15,7 @@ public class ServerConfigModel {
     public static class UsersConfigModel {
         private String name;
         private String password;
+        private String key;
     }
 
     public UsersConfigModel getUser(String userName) throws Exception {

@@ -1,21 +1,24 @@
 package com.codexsoft.sas.connections;
 
+import lombok.Builder;
+
+import java.util.Objects;
+
+@Builder
 public class ConnectionProperties {
     private String host;
     private int port;
     private String userName;
     private String password;
+    private String key;
 
     @java.beans.ConstructorProperties({"host", "port", "userName", "password"})
-    public ConnectionProperties(String host, int port, String userName, String password) {
+    public ConnectionProperties(String host, int port, String userName, String password, String key) {
         this.host = host;
         this.port = port;
         this.userName = userName;
         this.password = password;
-    }
-
-    public static ConnectionPropertiesBuilder builder() {
-        return new ConnectionPropertiesBuilder();
+        this.key = key;
     }
 
     public String getHost() {
@@ -34,6 +37,10 @@ public class ConnectionProperties {
         return this.password;
     }
 
+    public String getKey() {
+        return key;
+    }
+
     public void setHost(String host) {
         this.host = host;
     }
@@ -50,35 +57,21 @@ public class ConnectionProperties {
         this.password = password;
     }
 
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof ConnectionProperties)) return false;
-        final ConnectionProperties other = (ConnectionProperties) o;
-        if (!other.canEqual((Object) this)) return false;
-        final Object this$host = this.getHost();
-        final Object other$host = other.getHost();
-        if (this$host == null ? other$host != null : !this$host.equals(other$host)) return false;
-        if (this.getPort() != other.getPort()) return false;
-        final Object this$userName = this.getUserName();
-        final Object other$userName = other.getUserName();
-        if (this$userName == null ? other$userName != null : !this$userName.equals(other$userName)) return false;
-        final Object this$password = this.getPassword();
-        final Object other$password = other.getPassword();
-        if (this$password == null ? other$password != null : !this$password.equals(other$password)) return false;
-        return true;
+    public void setKey(String key) {
+        this.key = key;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConnectionProperties that = (ConnectionProperties) o;
+        return port == that.port && host.equals(that.host) && userName.equals(that.userName) && password.equals(that.password) && key.equals(that.key);
+    }
+
+    @Override
     public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        final Object $host = this.getHost();
-        result = result * PRIME + ($host == null ? 43 : $host.hashCode());
-        result = result * PRIME + this.getPort();
-        final Object $userName = this.getUserName();
-        result = result * PRIME + ($userName == null ? 43 : $userName.hashCode());
-        final Object $password = this.getPassword();
-        result = result * PRIME + ($password == null ? 43 : $password.hashCode());
-        return result;
+        return Objects.hash(host, port, userName, password, key);
     }
 
     protected boolean canEqual(Object other) {
@@ -86,44 +79,6 @@ public class ConnectionProperties {
     }
 
     public String toString() {
-        return "com.codexsoft.sas.connections.ConnectionProperties(host=" + this.getHost() + ", port=" + this.getPort() + ", userName=" + this.getUserName() + ", password=" + this.getPassword() + ")";
-    }
-
-    public static class ConnectionPropertiesBuilder {
-        private String host;
-        private int port;
-        private String userName;
-        private String password;
-
-        ConnectionPropertiesBuilder() {
-        }
-
-        public ConnectionProperties.ConnectionPropertiesBuilder host(String host) {
-            this.host = host;
-            return this;
-        }
-
-        public ConnectionProperties.ConnectionPropertiesBuilder port(int port) {
-            this.port = port;
-            return this;
-        }
-
-        public ConnectionProperties.ConnectionPropertiesBuilder userName(String userName) {
-            this.userName = userName;
-            return this;
-        }
-
-        public ConnectionProperties.ConnectionPropertiesBuilder password(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public ConnectionProperties build() {
-            return new ConnectionProperties(host, port, userName, password);
-        }
-
-        public String toString() {
-            return "com.codexsoft.sas.connections.ConnectionProperties.ConnectionPropertiesBuilder(host=" + this.host + ", port=" + this.port + ", userName=" + this.userName + ", password=" + this.password + ")";
-        }
+        return "com.codexsoft.sas.connections.ConnectionProperties(host=" + this.getHost() + ", port=" + this.getPort() + ", userName=" + this.getUserName() + ", password=" + this.getPassword() + ", key=" + this.getKey()+ ")";
     }
 }

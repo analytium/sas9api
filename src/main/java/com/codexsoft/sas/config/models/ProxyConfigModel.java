@@ -43,7 +43,8 @@ public class ProxyConfigModel {
                 server.getHost(),
                 server.getPort(),
                 user.getName(),
-                user.getPassword()
+                user.getPassword(),
+                user.getKey()
         );
     }
 }

@@ -1,13 +1,19 @@
 package com.codexsoft.sas.config;
 
 
+import com.codexsoft.sas.config.models.ProxyConfigModel;
+import com.codexsoft.sas.secure.ApiKeyRequestInterceptor;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import org.springframework.aop.framework.ProxyConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -16,6 +22,16 @@ import java.util.Optional;
 
 @Configuration
 public class SpringConfig extends WebMvcConfigurerAdapter {
+    private final ProxyConfigModel proxyConfigModel;
+
+    public SpringConfig(ProxyConfigModel proxyConfigModel) {
+        this.proxyConfigModel = proxyConfigModel;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new ApiKeyRequestInterceptor(proxyConfigModel));
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -24,19 +40,12 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
-
-
-
     }
 
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-
     /*    A a = beanFactory.getBean(A.class);
         beanFactory.autowireBean(a);*/
-
-
-
         configurer.favorPathExtension(false).
                 favorParameter(true).
                 defaultContentType(MediaType.APPLICATION_JSON);
