@@ -33,6 +33,7 @@ proxy:
   # Required: a list of metadata servers and their connection details
   servers:
     - # server alias name to use in endpoints that require it
+      apikeyEnabled: true
       name: test
       # metadata server host address
       host: sas.analytium.co.uk
@@ -44,13 +45,17 @@ proxy:
           name: sasdev
           # user password
           password: DevelopingSASSolutions
+          key: GermanySchedulingUser
         - name: sasadm
           password: DevelopingSASSolutions
+          key: BelgiumBatchUser
     - name: prod
       host: sas.analytium.co.uk
       port: 8571
       users:
         - name: sasdev1
           password: DevelopingSASSolutions
+          key: GermanySchedulingUser1
         - name: sasadm1
           password: Develop1ingSASSolutions
+          key: BelgiumBatchUser

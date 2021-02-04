@@ -23,10 +23,10 @@ public class ResponseUtils {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
 
-            log.error("Error occurred: {}", e.getMessage());
+            log.error("Error occurred: {}", e.getMessage(), e);
 
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setError(e.toString());
+            response.setError(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

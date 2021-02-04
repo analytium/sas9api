@@ -10,11 +10,13 @@ public class ServerConfigModel {
     private String host;
     private int port;
     private List<UsersConfigModel> users;
+    private boolean apikeyEnabled;
 
     @Data
     public static class UsersConfigModel {
         private String name;
         private String password;
+        private String key;
     }
 
     public UsersConfigModel getUser(String userName) throws Exception {

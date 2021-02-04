@@ -38,7 +38,9 @@ public class ConnectionHelpers {
                     connection.getHost(),
                     connection.getPort(),
                     iomConnectionProps.getUserName(),
-                    iomConnectionProps.getPassword()
+                    iomConnectionProps.getPassword(),
+                    iomConnectionProps.getKey(),
+                    iomConnectionProps.isApikeyEnabled()
             );
         }
     }
@@ -55,7 +57,9 @@ public class ConnectionHelpers {
                 workspaceHost,
                 Integer.parseInt(workspactPort),
                 iomConnectionProps.getUserName(),
-                iomConnectionProps.getPassword()
+                iomConnectionProps.getPassword(),
+                iomConnectionProps.getKey(),
+                iomConnectionProps.isApikeyEnabled()
         );
     }
 
@@ -84,7 +88,9 @@ public class ConnectionHelpers {
                 workspaceHost,
                 Integer.parseInt(workspacePort),
                 iomConnectionProps.getUserName(),
-                iomConnectionProps.getPassword()
+                iomConnectionProps.getPassword(),
+                iomConnectionProps.getKey(),
+                iomConnectionProps.isApikeyEnabled()
         );
         return new JDBCConnection(workspaceConnectionProps);
     }
