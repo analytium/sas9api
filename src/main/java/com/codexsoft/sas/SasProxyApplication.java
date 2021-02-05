@@ -1,11 +1,15 @@
 package com.codexsoft.sas;
 
 import com.codexsoft.sas.config.SpringConfig;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.catalina.Context;
+import org.apache.catalina.connector.Connector;
+import org.apache.tomcat.util.descriptor.web.SecurityCollection;
+import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -26,9 +30,6 @@ import java.util.HashSet;
 @EnableWebMvc
 @Import(SpringConfig.class)
 public class SasProxyApplication {
-	@Autowired
-	private ApplicationContext context;
-
 	@Value("${swagger.host}")
 	private String swaggerHost;
 
@@ -46,7 +47,39 @@ public class SasProxyApplication {
 				.apis(RequestHandlerSelectors.basePackage("com.codexsoft.sas.controllers"))
 				.paths(PathSelectors.any())
 				.build()
-				.produces(new HashSet<String>(Arrays.asList(new String[]{MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})))
+				.produces(new HashSet<>(Arrays.asList(MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE)))
 		;
+	}
+
+	//Server configuration for https endpoints
+	@Bean
+	public EmbeddedServletContainerFactory servletContainer() {
+		TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory() {
+			@Override
+			protected void postProcessContext(Context context) {
+				SecurityConstraint securityConstraint = new SecurityConstraint();
+				securityConstraint.setUserConstraint("CONFIDENTIAL");
+				SecurityCollection collection = new SecurityCollection();
+				collection.addPattern("/*");
+				securityConstraint.addCollection(collection);
+				context.addConstraint(securityConstraint);
+			}
+		};
+		tomcat.addAdditionalTomcatConnectors(redirectConnector());
+		return tomcat;
+	}
+
+	@Value("${server.port.http}") //Defined in application.properties file
+	int httpPort;
+	@Value("${server.port}") //Defined in application.properties file
+	int httpsPort;
+
+	private Connector redirectConnector() {
+		Connector connector = new Connector(TomcatEmbeddedServletContainerFactory.DEFAULT_PROTOCOL);
+		connector.setScheme("http");
+		connector.setPort(httpPort);
+		connector.setSecure(true);
+		connector.setRedirectPort(httpsPort);
+		return connector;
 	}
 }
