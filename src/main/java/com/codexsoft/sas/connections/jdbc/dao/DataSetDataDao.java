@@ -1,5 +1,6 @@
 package com.codexsoft.sas.connections.jdbc.dao;
 
+import com.codexsoft.sas.config.models.DataSetDataConfigModel;
 import com.codexsoft.sas.connections.jdbc.JDBCConnection;
 import com.codexsoft.sas.connections.jdbc.utils.JDBCUtils;
 import com.codexsoft.sas.connections.workspace.WorkspaceConnection;
@@ -23,13 +24,13 @@ import java.util.stream.Collectors;
 @Service(value = "DataSetDataDao")
 @Scope("prototype")
 public class DataSetDataDao {
-    public static int DEFAULT_FETCH_SIZE = 100;
-    public static int MAX_FETCH_SIZE = 10000;
+    private final DataSetDataConfigModel dataSetDataConfigModel;
     private static final String OPTIONS_COMMAND = "options VALIDVARNAME = ANY VALIDMEMNAME = EXTEND;";
 
-    private JDBCConnection jdbcConnection;
+    private final JDBCConnection jdbcConnection;
 
-    public DataSetDataDao(JDBCConnection jdbcConnection) {
+    public DataSetDataDao(DataSetDataConfigModel dataSetDataConfigModel, JDBCConnection jdbcConnection) {
+        this.dataSetDataConfigModel = dataSetDataConfigModel;
         this.jdbcConnection = jdbcConnection;
     }
 
@@ -70,9 +71,9 @@ public class DataSetDataDao {
                 ResultSet.CONCUR_READ_ONLY
         )) {
             if (limit == 0) {
-                limit = DEFAULT_FETCH_SIZE;
+                limit = dataSetDataConfigModel.getDefaultFetchSize();
             }
-            limit = Math.min(limit, MAX_FETCH_SIZE);
+            limit = Math.min(limit, dataSetDataConfigModel.getMaxFetchSize());
 
             statement.setFetchSize(limit);
             statement.setMaxRows(offset + limit);
