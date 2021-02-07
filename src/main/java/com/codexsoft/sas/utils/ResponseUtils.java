@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import javax.validation.ValidationException;
+
 /**
  * Created by eugene on 18.7.17.
  */
@@ -21,14 +23,19 @@ public class ResponseUtils {
             response.setPayload(payload);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (Exception exception) {
+            log.error("Error occurred: {}", exception.getMessage(), exception);
 
-            log.error("Error occurred: {}", e.getMessage(), e);
+            if (exception instanceof ValidationException)
+                return getApiResponseResponseEntity(response, exception.getMessage(), HttpStatus.BAD_REQUEST);
 
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setError(e.getMessage());
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return getApiResponseResponseEntity(response, exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private static <T> ResponseEntity<APIResponse<T>> getApiResponseResponseEntity(APIResponse<T> response, String exceptionMessage, HttpStatus httpStatus) {
+        response.setStatus(httpStatus.value());
+        response.setError(exceptionMessage);
+        return new ResponseEntity<>(response, httpStatus);
     }
 }
