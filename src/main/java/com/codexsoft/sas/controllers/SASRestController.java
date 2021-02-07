@@ -399,14 +399,14 @@ public class SASRestController {
             int offset
     ) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> filter = null;
+        Map<String, Object> filter;
         if (filterJson != null && filterJson.length() > 0) {
             filter = mapper.readValue(filterJson, Map.class);
         } else {
             filter = null;
         }
         Map<String, Object> finalFilter = filter;
-        DataSetDataDao dataSetDataDao = (DataSetDataDao) context.getBean("DataSetDataDao", jdbcConnection);
+        DataSetDataDao dataSetDataDao = (DataSetDataDao) context.getBean("DataSetDataDao", dataSetDataConfigModel, jdbcConnection);
         return dataSetDataDao.getData(libraryName, datasetName, finalFilter, limit, offset);
     }
 
