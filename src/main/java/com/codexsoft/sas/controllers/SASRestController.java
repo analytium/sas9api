@@ -1,5 +1,6 @@
 package com.codexsoft.sas.controllers;
 
+import com.codexsoft.sas.config.models.DataSetDataConfigModel;
 import com.codexsoft.sas.config.models.ProxyConfigModel;
 import com.codexsoft.sas.connections.ConnectionHelpers;
 import com.codexsoft.sas.connections.ConnectionProperties;
@@ -53,11 +54,13 @@ public class SASRestController {
     private final ApplicationContext context;
     private final ConnectionHelpers connectionHelpers;
     private final LicenseService licenseService;
+    private final DataSetDataConfigModel dataSetDataConfigModel;
 
-    public SASRestController(ApplicationContext context, ConnectionHelpers connectionHelpers, LicenseService licenseService) {
+    public SASRestController(ApplicationContext context, ConnectionHelpers connectionHelpers, LicenseService licenseService, DataSetDataConfigModel dataSetDataConfigModel) {
         this.context = context;
         this.connectionHelpers = connectionHelpers;
         this.licenseService = licenseService;
+        this.dataSetDataConfigModel = dataSetDataConfigModel;
     }
 
     private ConnectionProperties getConnectionProperties(HttpServletRequest request) throws Exception {
@@ -491,7 +494,7 @@ public class SASRestController {
             List<Map<String, Object>> data,
             String byKey
     ) throws Exception {
-        DataSetDataDao dao = new DataSetDataDao(jdbcConnection);
+        DataSetDataDao dao = new DataSetDataDao(dataSetDataConfigModel, jdbcConnection);
         int[] recordsAffected = dao.replaceData(libraryName, datasetName, data, byKey);
         
         return DMLResponse.builder()
@@ -573,7 +576,7 @@ public class SASRestController {
             String datasetName,
             List<Map<String, Object>> data
     ) throws Exception {
-        DataSetDataDao dao = new DataSetDataDao(jdbcConnection);
+        DataSetDataDao dao = new DataSetDataDao(dataSetDataConfigModel, jdbcConnection);
         int[] recordsAffected = dao.replaceDataAll(libraryName, datasetName, data);
         return DMLResponse.builder()
                 .itemsInserted(recordsAffected[0])
