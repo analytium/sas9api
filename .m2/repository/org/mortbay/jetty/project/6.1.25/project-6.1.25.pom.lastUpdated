@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Sun Feb 07 02:39:41 GMT 2021
+https\://repo.maven.apache.org/maven2/.lastUpdated=1612665581539
+https\://repo.spring.io/libs-release/.error=Could not transfer artifact org.mortbay.jetty\:project\:pom\:6.1.25 from/to spring-releases (https\://repo.spring.io/libs-release)\: Authentication failed for https\://repo.spring.io/libs-release/org/mortbay/jetty/project/6.1.25/project-6.1.25.pom 401 Unauthorized
+@default-spring-releases-https\://repo.spring.io/libs-release/.lastUpdated=1612665581511

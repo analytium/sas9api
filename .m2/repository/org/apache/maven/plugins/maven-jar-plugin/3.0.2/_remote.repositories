@@ -1,4 +1,4 @@
 #NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Wed Jul 31 16:24:30 MSK 2019
-maven-jar-plugin-3.0.2.jar>spring-releases=
-maven-jar-plugin-3.0.2.pom>spring-releases=
+#Sun Feb 07 02:37:47 GMT 2021
+maven-jar-plugin-3.0.2.jar>central=
+maven-jar-plugin-3.0.2.pom>central=

@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Sun Feb 07 02:38:37 GMT 2021
+https\://repo.spring.io/libs-release/.error=Could not transfer artifact org.codehaus.plexus\:plexus\:pom\:2.0.5 from/to spring-releases (https\://repo.spring.io/libs-release)\: Authentication failed for https\://repo.spring.io/libs-release/org/codehaus/plexus/plexus/2.0.5/plexus-2.0.5.pom 401 Unauthorized
+@default-spring-releases-https\://repo.spring.io/libs-release/.lastUpdated=1612665517580
+https\://repo.maven.apache.org/maven2/.lastUpdated=1612665517592

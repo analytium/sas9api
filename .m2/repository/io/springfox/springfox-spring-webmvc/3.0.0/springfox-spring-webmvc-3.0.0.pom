@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- This module was also published with a richer model, Gradle metadata,  -->
+  <!-- which should be used instead. Do not delete the following line which  -->
+  <!-- is to indicate to Gradle or any Gradle module metadata file consumer  -->
+  <!-- that they should prefer consuming it instead. -->
+  <!-- do_not_remove: published-with-gradle-metadata -->
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.springfox</groupId>
+  <artifactId>springfox-spring-webmvc</artifactId>
+  <version>3.0.0</version>
+  <name>springfox-spring-webmvc</name>
+  <description>JSON API documentation for spring based applications</description>
+  <url>https://github.com/springfox/springfox</url>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>martypitt@me.com</id>
+      <name>Marty Pitt</name>
+      <email>martypitt@me.com</email>
+      <organization>The Mango Factory</organization>
+    </developer>
+    <developer>
+      <id>dilipkrish</id>
+      <name>Dilip Krishnan</name>
+      <email>dilipkrish_subscriptions@yahoo.com</email>
+    </developer>
+    <developer>
+      <id>adrianbk</id>
+      <name>Adrian Kelly</name>
+      <email>adrianbkelly+swagger@gmail.com</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git@github.com:springfox/springfox.git</connection>
+    <developerConnection>scm:git:git@github.com:springfox/springfox.git</developerConnection>
+    <url>scm:git:git@github.com:springfox/springfox.git</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-spi</artifactId>
+      <version>3.0.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-schema</artifactId>
+      <version>3.0.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-core</artifactId>
+      <version>3.0.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-spring-web</artifactId>
+      <version>3.0.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml</groupId>
+      <artifactId>classmate</artifactId>
+      <version>1.5.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.25</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.plugin</groupId>
+      <artifactId>spring-plugin-core</artifactId>
+      <version>2.0.0.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.plugin</groupId>
+      <artifactId>spring-plugin-metadata</artifactId>
+      <version>2.0.0.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>

@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Sun Feb 07 02:39:21 GMT 2021
+https\://repo.maven.apache.org/maven2/.lastUpdated=1612665561032
+https\://repo.spring.io/libs-release/.error=Could not transfer artifact org.apache.maven.doxia\:doxia-sink-api\:pom\:1.4 from/to spring-releases (https\://repo.spring.io/libs-release)\: Authentication failed for https\://repo.spring.io/libs-release/org/apache/maven/doxia/doxia-sink-api/1.4/doxia-sink-api-1.4.pom 401 Unauthorized
+@default-spring-releases-https\://repo.spring.io/libs-release/.lastUpdated=1612665560992
