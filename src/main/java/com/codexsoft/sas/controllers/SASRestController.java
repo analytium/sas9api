@@ -39,6 +39,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ValidationException;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -950,6 +952,9 @@ public class SASRestController {
     ) {
         return ResponseUtils.withResponse(() -> {
             licenseService.checkLicense(17256449, 2);
+
+            if (libraryName == null || libraryName.length() > 8)
+                throw new ValidationException("libraryName field length must be between 1 and 8");
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
