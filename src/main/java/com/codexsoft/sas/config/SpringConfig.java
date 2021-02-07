@@ -12,13 +12,13 @@ import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConve
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 import java.util.Optional;
 
 @Configuration
-public class SpringConfig extends WebMvcConfigurerAdapter {
+public class SpringConfig implements WebMvcConfigurer {
     private final ProxyConfigModel proxyConfigModel;
 
     public SpringConfig(ProxyConfigModel proxyConfigModel) {
