@@ -928,7 +928,7 @@ public class SASRestController {
             @ApiParam(value = "Server name")
             @PathVariable String serverName,
 
-            @ApiParam(value = "Created library name, as will be used in LIBNAME statement")
+            @ApiParam(value = "Created library name, as will be used in LIBNAME statement", allowableValues = "range[1, 8]")
             @PathVariable String libraryName,
 
             @ApiParam(value = "Repository name", defaultValue = "Foundation")
