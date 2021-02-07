@@ -68,7 +68,7 @@ proxy:
           password: Develop1ingSASSolutions
           key: BelgiumBatchUser
           
-#DataSet config
+#DataSetData config
 datasetdata:
   max_fetch_size: 10000
   default_fetch_size: 100
