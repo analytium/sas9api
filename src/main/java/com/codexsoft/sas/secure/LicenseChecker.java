@@ -16,7 +16,7 @@ public class LicenseChecker {
     };
 
     private int capabilities;
-    private String errors;
+    private final String errors;
 
     public LicenseChecker(int capabilities, String errors) {
         this.capabilities = capabilities;
