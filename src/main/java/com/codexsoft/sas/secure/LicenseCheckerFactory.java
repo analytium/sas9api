@@ -2,6 +2,7 @@ package com.codexsoft.sas.secure;
 
 import com.codexsoft.sas.config.models.ProxyConfigModel;
 import com.codexsoft.sas.connections.ConnectionProperties;
+import com.codexsoft.sas.secure.models.LicenseInfo;
 import com.codexsoft.sas.secure.sas.DateChecker;
 import com.codexsoft.sas.secure.sas.SiteNumberChecker;
 import com.google.common.io.ByteStreams;
@@ -21,6 +22,7 @@ import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,7 +36,7 @@ public class LicenseCheckerFactory {
     private static final String LICENSE_EXTENSION = ".dat";
     private static final String LICENSE_FILE_NOT_FOUND_ERROR = "no license file was found";
 
-    private ApplicationContext context;
+    private final ApplicationContext context;
     private LicenseChecker licenseChecker;
     private LocalDateTime licenseCheckerNextCheck;
 
@@ -46,6 +48,7 @@ public class LicenseCheckerFactory {
 
     private LicenseChecker createLicenseChecker() {
         int capabilities = 35830272; // 0b10001000101011101000000000 - empty license
+        List<LicenseInfo> licenseInfoList = new ArrayList<>();
         String errors = null;
         try {
             ProxyConfigModel proxyConfig = context.getBean(ProxyConfigModel.class);
@@ -56,12 +59,13 @@ public class LicenseCheckerFactory {
             LocalDate date = dateChecker.getWorkspaceDate();
             List<File> licenseFiles = getLicenseFiles(LICENSE_FOLDER);
             LicenseCapabilitiesReader reader = new LicenseCapabilitiesReader(getPublicKey());
-            capabilities = getAccumulatedLicense(licenseFiles, reader, siteNumber, date);     
+            licenseInfoList = getLicenseInfo(licenseFiles, reader, siteNumber);
+            capabilities = getAccumulatedLicense(licenseInfoList, reader, siteNumber, date);
         } catch (Exception e) {
             capabilities *= 287479809; // 0b10001001000101001100000000001 - preserves lower 10 bits
             errors = e.getMessage();
         }
-        return new LicenseChecker(capabilities, errors);
+        return new LicenseChecker(capabilities, licenseInfoList, errors);
     }
 
     public LicenseChecker getLicenseChecker() {
@@ -103,17 +107,23 @@ public class LicenseCheckerFactory {
         }
     }
 
-    private int getAccumulatedLicense(
-            List<File> licenseFiles,
-            LicenseCapabilitiesReader reader,
-            String siteNumber,
-            LocalDate date
-    ) throws Exception {
-        int accumulatedLicense = 170394624; // 0b1010001010000000010000000000 - empty license by default
+    public List<LicenseInfo> getLicenseInfo(List<File> licenseFiles, LicenseCapabilitiesReader reader, String siteNumber) throws Exception {
+        List<LicenseInfo> licenseInfoList = new ArrayList<>();
         for (File licenseFile : licenseFiles) {
             byte[] licenseData = readFile(licenseFile);
-            accumulatedLicense |= reader.readLicenseCapabilities(licenseData, siteNumber, date);
-            accumulatedLicense *= 25756673; // 1100010010000010000000001 - preserves lower 10 bits
+            LicenseInfo licenseInfo = reader.getLicenseInfo(licenseData, siteNumber);
+            licenseInfoList.add(licenseInfo);
+        }
+        return licenseInfoList;
+    }
+
+    private int getAccumulatedLicense(List<LicenseInfo> licenseInfoList, LicenseCapabilitiesReader reader, String siteNumber, LocalDate date) {
+        int accumulatedLicense = 170394624; // 0b1010001010000000010000000000 - empty license by default
+        if (!licenseInfoList.isEmpty()) {
+            for (LicenseInfo licenseInfo : licenseInfoList) {
+                accumulatedLicense |= reader.readLicenseCapabilities(licenseInfo, siteNumber, date);
+                accumulatedLicense *= 25756673; // 1100010010000010000000001 - preserves lower 10 bits
+            }
         }
         return accumulatedLicense;
     }
