@@ -2,7 +2,7 @@ package com.codexsoft.sas.service;
 
 import com.codexsoft.sas.secure.LicenseChecker;
 import com.codexsoft.sas.secure.LicenseCheckerFactory;
-import com.codexsoft.sas.secure.models.LicenseCapabilities;
+import com.codexsoft.sas.secure.models.LicenseInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -36,9 +36,9 @@ public class LicenseServiceImpl implements LicenseService {
     }
 
     @Override
-    public List<LicenseCapabilities> getLicenseCapabilities(Integer multiplier, Integer targetLevel) throws Exception {
+    public List<LicenseInfo> getLicenseCapabilities(Integer multiplier, Integer targetLevel) throws Exception {
         final LicenseChecker licenseChecker = licenseCheckerFactory.getLicenseChecker();
         checkLicense(multiplier, targetLevel, licenseChecker);
-        return licenseChecker.getCapabilities();
+        return licenseChecker.getLicenseInfo();
     }
 }
