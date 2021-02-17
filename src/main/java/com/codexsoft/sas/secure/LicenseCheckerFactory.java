@@ -107,7 +107,7 @@ public class LicenseCheckerFactory {
         }
     }
 
-    public List<LicenseInfo> getLicenseInfo(List<File> licenseFiles, LicenseCapabilitiesReader reader, String siteNumber) throws Exception {
+    private List<LicenseInfo> getLicenseInfo(List<File> licenseFiles, LicenseCapabilitiesReader reader, String siteNumber) throws Exception {
         List<LicenseInfo> licenseInfoList = new ArrayList<>();
         for (File licenseFile : licenseFiles) {
             byte[] licenseData = readFile(licenseFile);
