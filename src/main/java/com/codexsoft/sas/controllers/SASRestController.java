@@ -25,7 +25,7 @@ import com.codexsoft.sas.connections.workspace.models.SASLanguageResponse;
 import com.codexsoft.sas.models.APIResponse;
 import com.codexsoft.sas.models.LibraryParams;
 import com.codexsoft.sas.models.ServerConfiguration;
-import com.codexsoft.sas.secure.models.LicenseCapabilities;
+import com.codexsoft.sas.secure.models.LicenseInfo;
 import com.codexsoft.sas.service.LicenseService;
 import com.codexsoft.sas.utils.ResponseUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -1282,7 +1282,7 @@ public class SASRestController {
     //////////// License endpoint /////////////////
     @ApiOperation(value = "Get information about active SAS Proxy license")
     @GetMapping(value = "/license")
-    public ResponseEntity<APIResponse<List<LicenseCapabilities>>> getLicense() {
+    public ResponseEntity<APIResponse<List<LicenseInfo>>> getLicense() {
         return ResponseUtils.withResponse(() ->
                 licenseService.getLicenseCapabilities(1147905, 1));
     }

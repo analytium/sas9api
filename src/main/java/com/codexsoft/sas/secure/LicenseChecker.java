@@ -1,6 +1,7 @@
 package com.codexsoft.sas.secure;
 
 import com.codexsoft.sas.secure.models.LicenseCapabilities;
+import com.codexsoft.sas.secure.models.LicenseInfo;
 import lombok.Builder;
 
 import java.util.ArrayList;
@@ -16,10 +17,12 @@ public class LicenseChecker {
     };
 
     private int capabilities;
+    private final List<LicenseInfo> licenseInfoList;
     private final String errors;
 
-    public LicenseChecker(int capabilities, String errors) {
+    public LicenseChecker(int capabilities, List<LicenseInfo> licenseInfoList, String errors) {
         this.capabilities = capabilities;
+        this.licenseInfoList = licenseInfoList;
         this.errors = errors;
     }
 
@@ -59,7 +62,7 @@ public class LicenseChecker {
         return false;
     }
 
-    public List<LicenseCapabilities> getCapabilities() {
+    public List<LicenseInfo> getLicenseInfo() {
         int v = capabilities;
         // reverse bits in v
         int s = 32;
@@ -69,18 +72,36 @@ public class LicenseChecker {
             v = ((v >> s) & mask) | ((v << s) & ~mask);
         }
         int level = 0;
-        List<LicenseCapabilities> licenseCapabilities = new ArrayList<>();
+        List<LicenseInfo> licenseInfos = new ArrayList<>();
         while (v != 0) {
             if (v < 0) {
-                LicenseCapabilities capability = LicenseCapabilities.byLevel(level + 1);
+                int capabilityLevel = level + 1;
+                LicenseCapabilities capability = LicenseCapabilities.byLevel(capabilityLevel);
+
                 if (capability != null) {
-                    licenseCapabilities.add(capability);
+                    LicenseInfo licenseInfo;
+                    if (capabilityLevel == 3) {
+                        licenseInfo = licenseInfoList.stream()
+                                .filter(l -> Integer.parseInt(l.getCapabilityLevel()) >= capabilityLevel)
+                                .findAny()
+                                .orElse(null);
+                    } else {
+                        licenseInfo = licenseInfoList.stream()
+                                .filter(l -> l.getCapabilityLevel().equals(String.valueOf(capabilityLevel)))
+                                .findAny()
+                                .orElse(null);
+                    }
+
+                    if (licenseInfo != null) {
+                        licenseInfo.setLicenseCapability(capability);
+                        licenseInfos.add(licenseInfo);
+                    }
                 }
             }
             level += 1;
             v *= 2;
         }
-        return licenseCapabilities;
+        return licenseInfos;
     }
 
     public String getErrors() {
