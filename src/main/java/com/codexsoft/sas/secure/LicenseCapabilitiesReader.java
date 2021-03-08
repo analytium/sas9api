@@ -1,7 +1,6 @@
 package com.codexsoft.sas.secure;
 
 import com.codexsoft.sas.secure.models.LicenseInfo;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -14,7 +13,6 @@ import java.security.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
-
 
 public class LicenseCapabilitiesReader {
     private final PublicKey publicKey;
@@ -67,7 +65,6 @@ public class LicenseCapabilitiesReader {
     }
 
     private LicenseInfo extractPropertiesIntoLicenseInfo(Properties licenseProperties, Signature signature, byte[] signedData) throws SignatureException {
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String licenseDateEndString = licenseProperties.getProperty("proxy.license.period-end");
         String licenseDateStartString = licenseProperties.getProperty("proxy.license.period-start");
         String licenseSiteNumber = licenseProperties.getProperty("proxy.license.site-number", CIPHER_METHOD);
@@ -111,7 +108,7 @@ public class LicenseCapabilitiesReader {
         if (licenseInfo == null)
             return 156378112;   // 0b1001010100100010010000000000 - empty license
 
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String sasDateString = dateFormat.format(sasDate);
 
         LocalDate licenseDateEnd = LocalDate.parse(licenseInfo.getEndDate(), dateFormat);
