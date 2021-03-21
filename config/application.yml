@@ -25,12 +25,12 @@ server:
   port: 8080
   port.http: 8082
   ssl:
-    enabled: true
     key-alias: selfsigned_localhost_sslserver
-    key-store: classpath:localhost-ssl-key.p12
+    key-store: classpath:localhost-ssl-keystore.p12
     key-store-type: PKCS12
     key-store-password: sas9api
     key-password: sas9api
+    enabled: true
 
 proxy:
   sas:
