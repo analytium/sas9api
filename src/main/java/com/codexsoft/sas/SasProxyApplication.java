@@ -52,7 +52,8 @@ public class SasProxyApplication {
 	}
 
 	@Bean
-	public ServletWebServerFactory servletContainer() {
+	public ServletWebServerFactory servletContainer(@Value("${server.port.http}") int httpPort,
+													@Value("${server.port}") int httpsPort) {
 		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
 			@Override
 			protected void postProcessContext(Context context) {
@@ -64,16 +65,11 @@ public class SasProxyApplication {
 				context.addConstraint(securityConstraint);
 			}
 		};
-		tomcat.addAdditionalTomcatConnectors(redirectConnector());
+		tomcat.addAdditionalTomcatConnectors(redirectConnector(httpPort, httpsPort));
 		return tomcat;
 	}
 
-	@Value("${server.port.http}") //Defined in application.properties file
-	int httpPort;
-	@Value("${server.port}") //Defined in application.properties file
-	int httpsPort;
-
-	private Connector redirectConnector() {
+	private Connector redirectConnector(int httpPort, int httpsPort) {
 		Connector connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
 		connector.setScheme("http");
 		connector.setPort(httpPort);
