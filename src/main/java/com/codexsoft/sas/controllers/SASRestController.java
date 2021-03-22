@@ -25,8 +25,8 @@ import com.codexsoft.sas.connections.workspace.models.SASLanguageResponse;
 import com.codexsoft.sas.models.APIResponse;
 import com.codexsoft.sas.models.LibraryParams;
 import com.codexsoft.sas.models.ServerConfiguration;
+import com.codexsoft.sas.secure.LicenseCheckerFacade;
 import com.codexsoft.sas.secure.models.LicenseInfo;
-import com.codexsoft.sas.service.LicenseService;
 import com.codexsoft.sas.utils.ResponseUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
@@ -54,13 +54,13 @@ public class SASRestController {
 
     private final ApplicationContext context;
     private final ConnectionHelpers connectionHelpers;
-    private final LicenseService licenseService;
+    private final LicenseCheckerFacade licenseCheckerFacade;
     private final DataSetDataConfigModel dataSetDataConfigModel;
 
-    public SASRestController(ApplicationContext context, ConnectionHelpers connectionHelpers, LicenseService licenseService, DataSetDataConfigModel dataSetDataConfigModel) {
+    public SASRestController(ApplicationContext context, ConnectionHelpers connectionHelpers, LicenseCheckerFacade licenseCheckerFacade, DataSetDataConfigModel dataSetDataConfigModel) {
         this.context = context;
         this.connectionHelpers = connectionHelpers;
-        this.licenseService = licenseService;
+        this.licenseCheckerFacade = licenseCheckerFacade;
         this.dataSetDataConfigModel = dataSetDataConfigModel;
     }
 
@@ -76,7 +76,7 @@ public class SASRestController {
     @GetMapping()
     public ResponseEntity<APIResponse<ServerConfiguration>> sasMetadataInfo(HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(1147905, 1);
+            licenseCheckerFacade.checkLicense(1147905, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (val connection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -99,7 +99,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (val connection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -122,7 +122,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (val connection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -155,7 +155,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
@@ -180,7 +180,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
@@ -215,7 +215,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
@@ -240,7 +240,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
@@ -278,7 +278,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
@@ -303,7 +303,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
@@ -350,7 +350,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
@@ -378,7 +378,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
@@ -440,7 +440,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
@@ -477,7 +477,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
@@ -527,7 +527,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
@@ -560,7 +560,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
@@ -605,7 +605,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
@@ -635,7 +635,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
@@ -677,7 +677,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
@@ -705,7 +705,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
@@ -737,7 +737,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -760,7 +760,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -777,7 +777,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -796,7 +796,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -819,7 +819,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -841,7 +841,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -864,7 +864,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -886,7 +886,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-           licenseService.checkLicense(201729, 1);
+           licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -909,7 +909,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(201729, 1);
+            licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -950,7 +950,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             if (libraryName == null || libraryName.length() > 8)
                 throw new ValidationException("libraryName field length must be between 1 and 8");
@@ -989,7 +989,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -1024,7 +1024,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             ConnectionProperties workspaceConnectionProps = connectionHelpers.getWorkspaceConnectionPropsByServerName(
@@ -1055,7 +1055,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             ConnectionProperties workspaceConnectionProps = connectionHelpers.getWorkspaceConnectionPropsByHost(
@@ -1084,7 +1084,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(17256449, 2);
+            licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = new  IOMConnection(connectionProperties)) {
@@ -1141,7 +1141,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(5325825, 3);
+            licenseCheckerFacade.checkLicense(5325825, 3);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -1208,7 +1208,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(5325825, 3);
+            licenseCheckerFacade.checkLicense(5325825, 3);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -1236,7 +1236,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(5325825, 3);
+            licenseCheckerFacade.checkLicense(5325825, 3);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -1266,7 +1266,7 @@ public class SASRestController {
             HttpServletRequest request
     ) {
         return ResponseUtils.withResponse(() -> {
-            licenseService.checkLicense(5325825, 3);
+            licenseCheckerFacade.checkLicense(5325825, 3);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -1284,7 +1284,7 @@ public class SASRestController {
     @GetMapping(value = "/license")
     public ResponseEntity<APIResponse<List<LicenseInfo>>> getLicense() {
         return ResponseUtils.withResponse(() ->
-                licenseService.getLicenseCapabilities(1147905, 1));
+                licenseCheckerFacade.getLicenseCapabilities(1147905, 1));
     }
 }
 

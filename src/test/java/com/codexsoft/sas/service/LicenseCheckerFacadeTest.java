@@ -2,6 +2,7 @@ package com.codexsoft.sas.service;
 
 import com.codexsoft.sas.secure.LicenseChecker;
 import com.codexsoft.sas.secure.LicenseCheckerFactory;
+import com.codexsoft.sas.secure.LicenseCheckerFacade;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Rule;
@@ -11,13 +12,13 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static com.codexsoft.sas.service.LicenseServiceImpl.INVALID_LICENSE_ERROR_MESSAGE;
+import static com.codexsoft.sas.secure.LicenseCheckerFacade.INVALID_LICENSE_ERROR_MESSAGE;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
-public class LicenseServiceTest extends TestCase {
+public class LicenseCheckerFacadeTest extends TestCase {
 
-    private LicenseService licenseService;
+    private LicenseCheckerFacade licenseCheckerFacade;
 
     @MockBean
     private LicenseCheckerFactory licenseCheckerFactory;
@@ -29,7 +30,7 @@ public class LicenseServiceTest extends TestCase {
 
     @Before
     public void setup() {
-        licenseService = new LicenseServiceImpl(licenseCheckerFactory);
+        licenseCheckerFacade = new LicenseCheckerFacade(licenseCheckerFactory);
     }
 
     @Test
@@ -37,7 +38,7 @@ public class LicenseServiceTest extends TestCase {
         when(licenseCheckerFactory.getLicenseChecker())
                 .thenReturn(getLicenseCheckerWithValidLicense());
 
-        licenseService.checkLicense(1147905, 1);
+        licenseCheckerFacade.checkLicense(1147905, 1);
     }
 
     @Test
@@ -48,7 +49,7 @@ public class LicenseServiceTest extends TestCase {
         expectedException.expect(Exception.class);
         expectedException.expectMessage(INVALID_LICENSE_ERROR_MESSAGE);
 
-        licenseService.checkLicense(1147905, 1);
+        licenseCheckerFacade.checkLicense(1147905, 1);
     }
 
     @Test
@@ -59,7 +60,7 @@ public class LicenseServiceTest extends TestCase {
         expectedException.expect(Exception.class);
         expectedException.expectMessage(accessDeniedErrorMessage);
 
-        licenseService.checkLicense(1147905, 1);
+        licenseCheckerFacade.checkLicense(1147905, 1);
     }
 
     private LicenseChecker getLicenseCheckerWithValidLicense() {
