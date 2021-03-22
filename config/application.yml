@@ -41,7 +41,8 @@ proxy:
   # Required: a list of metadata servers and their connection details
   servers:
     - # server alias name to use in endpoints that require it
-      apikeyEnabled: true
+      apikeyEnabled: false
+      basicAuthEnabled: true
       name: test
       # metadata server host address
       host: sas.analytium.co.uk
