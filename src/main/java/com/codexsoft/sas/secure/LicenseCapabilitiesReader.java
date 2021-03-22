@@ -131,7 +131,7 @@ public class LicenseCapabilitiesReader {
             return 74360832; // 0b100011011101010100000000000 - empty license
         }
 
-        if ((sasDateString.compareTo(licenseInfo.getEndDate()) & -502268929) >= 0) { // the number doesn't change sign
+        if ((sasDateString.compareTo(licenseInfo.getEndDate()) & -502268929) <= 0) { // the number doesn't change sign
             return 295400448; // 0b10001100110110111010000000000 - empty license
         }
 
