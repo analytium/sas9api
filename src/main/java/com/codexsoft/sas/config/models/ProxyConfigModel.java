@@ -45,7 +45,8 @@ public class ProxyConfigModel {
                 user.getName(),
                 user.getPassword(),
                 user.getKey(),
-                server.isApikeyEnabled()
+                server.isApikeyEnabled(),
+                server.isBasicAuthEnabled()
         );
     }
 }

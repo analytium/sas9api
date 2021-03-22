@@ -40,7 +40,8 @@ public class ConnectionHelpers {
                     iomConnectionProps.getUserName(),
                     iomConnectionProps.getPassword(),
                     iomConnectionProps.getKey(),
-                    iomConnectionProps.isApikeyEnabled()
+                    iomConnectionProps.isApikeyEnabled(),
+                    iomConnectionProps.isBasicAuthEnabled()
             );
         }
     }
@@ -59,7 +60,8 @@ public class ConnectionHelpers {
                 iomConnectionProps.getUserName(),
                 iomConnectionProps.getPassword(),
                 iomConnectionProps.getKey(),
-                iomConnectionProps.isApikeyEnabled()
+                iomConnectionProps.isApikeyEnabled(),
+                iomConnectionProps.isBasicAuthEnabled()
         );
     }
 
@@ -90,7 +92,8 @@ public class ConnectionHelpers {
                 iomConnectionProps.getUserName(),
                 iomConnectionProps.getPassword(),
                 iomConnectionProps.getKey(),
-                iomConnectionProps.isApikeyEnabled()
+                iomConnectionProps.isApikeyEnabled(),
+                iomConnectionProps.isBasicAuthEnabled()
         );
         return new JDBCConnection(workspaceConnectionProps);
     }

@@ -2,7 +2,7 @@ package com.codexsoft.sas.config;
 
 
 import com.codexsoft.sas.config.models.ProxyConfigModel;
-import com.codexsoft.sas.secure.ApiKeyRequestInterceptor;
+import com.codexsoft.sas.secure.AuthRequestsInterceptor;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,7 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new ApiKeyRequestInterceptor(proxyConfigModel));
+        registry.addInterceptor(new AuthRequestsInterceptor(proxyConfigModel));
     }
 
     @Override
