@@ -119,11 +119,9 @@ public class LicenseCheckerFactory {
 
     private int getAccumulatedLicense(List<LicenseInfo> licenseInfoList, LicenseCapabilitiesReader reader, String siteNumber, LocalDate date) {
         int accumulatedLicense = 170394624; // 0b1010001010000000010000000000 - empty license by default
-        if (!licenseInfoList.isEmpty()) {
-            for (LicenseInfo licenseInfo : licenseInfoList) {
-                accumulatedLicense |= reader.readLicenseCapabilities(licenseInfo, siteNumber, date);
-                accumulatedLicense *= 25756673; // 1100010010000010000000001 - preserves lower 10 bits
-            }
+        for (LicenseInfo licenseInfo : licenseInfoList) {
+            accumulatedLicense |= reader.readLicenseCapabilities(licenseInfo, siteNumber, date);
+            accumulatedLicense *= 25756673; // 1100010010000010000000001 - preserves lower 10 bits
         }
         return accumulatedLicense;
     }
