@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,5 +16,5 @@ public class LicenseInfo {
     private String startDate;
     private String disableAllChecks;
     private String destroyServerOnFailure;
-    private LicenseCapabilities licenseCapability;
+    private List<LicenseCapabilities> licenseCapabilities;
 }

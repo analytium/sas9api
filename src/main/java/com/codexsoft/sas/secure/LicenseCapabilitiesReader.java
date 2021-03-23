@@ -1,6 +1,8 @@
 package com.codexsoft.sas.secure;
 
+import com.codexsoft.sas.secure.models.LicenseCapabilities;
 import com.codexsoft.sas.secure.models.LicenseInfo;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -12,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Properties;
 
 public class LicenseCapabilitiesReader {
@@ -64,7 +67,7 @@ public class LicenseCapabilitiesReader {
         return signedData;
     }
 
-    private LicenseInfo extractPropertiesIntoLicenseInfo(Properties licenseProperties, Signature signature, byte[] signedData) throws SignatureException {
+    private LicenseInfo extractPropertiesIntoLicenseInfo(Properties licenseProperties, Signature signature, byte[] signedData, LocalDate date) throws SignatureException {
         String licenseDateEndString = licenseProperties.getProperty("proxy.license.period-end");
         String licenseDateStartString = licenseProperties.getProperty("proxy.license.period-start");
         String licenseSiteNumber = licenseProperties.getProperty("proxy.license.site-number", CIPHER_METHOD);
@@ -73,7 +76,7 @@ public class LicenseCapabilitiesReader {
         String licenseDestroyServerOnFailure = licenseProperties.getProperty("proxy.license.destroy-server-on-failure",  // never happens
                 "sas-delete-repository " + signature.verify(signedData));
 
-        return LicenseInfo.builder()
+        LicenseInfo licenseInfo = LicenseInfo.builder()
                 .siteNumber(licenseSiteNumber)
                 .capabilityLevel(licenseCapabilityLevels)
                 .disableAllChecks(licenseDisableAllChecks)
@@ -81,9 +84,17 @@ public class LicenseCapabilitiesReader {
                 .startDate(licenseDateStartString)
                 .endDate(licenseDateEndString)
                 .build();
+
+        int accumulatedLicense = 170394624; // 0b1010001010000000010000000000 - empty license by default
+        accumulatedLicense |= readLicenseCapabilities(licenseInfo, licenseSiteNumber, date);
+        accumulatedLicense *= 25756673; // 1100010010000010000000001 - preserves lower 10 bits
+        List<LicenseCapabilities> licenseCapabilities = LicenseChecker.getCapabilities(accumulatedLicense);
+        licenseInfo.setLicenseCapabilities(licenseCapabilities);
+
+        return licenseInfo;
     }
 
-    public LicenseInfo getLicenseInfo(byte[] licenseData, String siteNumber) throws Exception {
+    public LicenseInfo getLicenseInfo(byte[] licenseData, String siteNumber, LocalDate date) throws Exception {
         try {
             licenseData = this.decipherLicenseData(licenseData, siteNumber);
         } catch (Exception e) {
@@ -101,7 +112,7 @@ public class LicenseCapabilitiesReader {
         signature.initVerify(publicKey);
         signature.update(license);
 
-        return extractPropertiesIntoLicenseInfo(licenseProperties, signature, signedData);
+        return extractPropertiesIntoLicenseInfo(licenseProperties, signature, signedData, date);
     }
 
     public int readLicenseCapabilities(LicenseInfo licenseInfo, String siteNumber, LocalDate sasDate) {

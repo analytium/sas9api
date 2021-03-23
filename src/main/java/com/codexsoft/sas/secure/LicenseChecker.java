@@ -17,12 +17,12 @@ public class LicenseChecker {
     };
 
     private int capabilities;
-    private final List<LicenseInfo> licenseInfoList;
+    private final List<LicenseInfo> licenseInfo;
     private final String errors;
 
-    public LicenseChecker(int capabilities, List<LicenseInfo> licenseInfoList, String errors) {
+    public LicenseChecker(int capabilities, List<LicenseInfo> licenseInfo, String errors) {
         this.capabilities = capabilities;
-        this.licenseInfoList = licenseInfoList;
+        this.licenseInfo = licenseInfo;
         this.errors = errors;
     }
 
@@ -62,7 +62,7 @@ public class LicenseChecker {
         return false;
     }
 
-    public List<LicenseInfo> getLicenseInfo() {
+    public static List<LicenseCapabilities> getCapabilities(int capabilities) {
         int v = capabilities;
         // reverse bits in v
         int s = 32;
@@ -72,36 +72,22 @@ public class LicenseChecker {
             v = ((v >> s) & mask) | ((v << s) & ~mask);
         }
         int level = 0;
-        List<LicenseInfo> licenseInfos = new ArrayList<>();
+        List<LicenseCapabilities> licenseCapabilities = new ArrayList<>();
         while (v != 0) {
             if (v < 0) {
-                int capabilityLevel = level + 1;
-                LicenseCapabilities capability = LicenseCapabilities.byLevel(capabilityLevel);
-
+                LicenseCapabilities capability = LicenseCapabilities.byLevel(level + 1);
                 if (capability != null) {
-                    LicenseInfo licenseInfo;
-                    if (capabilityLevel == 3) {
-                        licenseInfo = licenseInfoList.stream()
-                                .filter(l -> Integer.parseInt(l.getCapabilityLevel()) >= capabilityLevel)
-                                .findAny()
-                                .orElse(null);
-                    } else {
-                        licenseInfo = licenseInfoList.stream()
-                                .filter(l -> l.getCapabilityLevel().equals(String.valueOf(capabilityLevel)))
-                                .findAny()
-                                .orElse(null);
-                    }
-
-                    if (licenseInfo != null) {
-                        licenseInfo.setLicenseCapability(capability);
-                        licenseInfos.add(licenseInfo);
-                    }
+                    licenseCapabilities.add(capability);
                 }
             }
             level += 1;
             v *= 2;
         }
-        return licenseInfos;
+        return licenseCapabilities;
+    }
+
+    public List<LicenseInfo> getLicenseInfo() {
+        return licenseInfo;
     }
 
     public String getErrors() {

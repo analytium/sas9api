@@ -48,7 +48,7 @@ public class LicenseCheckerFactory {
 
     private LicenseChecker createLicenseChecker() {
         int capabilities = 35830272; // 0b10001000101011101000000000 - empty license
-        List<LicenseInfo> licenseInfoList = new ArrayList<>();
+        List<LicenseInfo> licenseInfo = new ArrayList<>();
         String errors = null;
         try {
             ProxyConfigModel proxyConfig = context.getBean(ProxyConfigModel.class);
@@ -59,13 +59,13 @@ public class LicenseCheckerFactory {
             LocalDate date = dateChecker.getWorkspaceDate();
             List<File> licenseFiles = getLicenseFiles(LICENSE_FOLDER);
             LicenseCapabilitiesReader reader = new LicenseCapabilitiesReader(getPublicKey());
-            licenseInfoList = getLicenseInfo(licenseFiles, reader, siteNumber);
-            capabilities = getAccumulatedLicense(licenseInfoList, reader, siteNumber, date);
+            licenseInfo = getLicenseInfo(licenseFiles, reader, siteNumber, date);
+            capabilities = getAccumulatedLicense(licenseInfo, reader, siteNumber, date);
         } catch (Exception e) {
             capabilities *= 287479809; // 0b10001001000101001100000000001 - preserves lower 10 bits
             errors = e.getMessage();
         }
-        return new LicenseChecker(capabilities, licenseInfoList, errors);
+        return new LicenseChecker(capabilities, licenseInfo, errors);
     }
 
     public LicenseChecker getLicenseChecker() {
@@ -107,11 +107,11 @@ public class LicenseCheckerFactory {
         }
     }
 
-    private List<LicenseInfo> getLicenseInfo(List<File> licenseFiles, LicenseCapabilitiesReader reader, String siteNumber) throws Exception {
+    private List<LicenseInfo> getLicenseInfo(List<File> licenseFiles, LicenseCapabilitiesReader reader, String siteNumber, LocalDate date) throws Exception {
         List<LicenseInfo> licenseInfoList = new ArrayList<>();
         for (File licenseFile : licenseFiles) {
             byte[] licenseData = readFile(licenseFile);
-            LicenseInfo licenseInfo = reader.getLicenseInfo(licenseData, siteNumber);
+            LicenseInfo licenseInfo = reader.getLicenseInfo(licenseData, siteNumber, date);
             licenseInfoList.add(licenseInfo);
         }
         return licenseInfoList;
