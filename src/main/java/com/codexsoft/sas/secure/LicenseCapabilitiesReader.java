@@ -2,6 +2,7 @@ package com.codexsoft.sas.secure;
 
 import com.codexsoft.sas.secure.models.LicenseCapabilities;
 import com.codexsoft.sas.secure.models.LicenseInfo;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -17,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Properties;
 
+@Slf4j
 public class LicenseCapabilitiesReader {
     private final PublicKey publicKey;
     private final String CIPHER_METHOD = "AES/CBC/PKCS5PADDING";
@@ -24,6 +26,28 @@ public class LicenseCapabilitiesReader {
 
     public LicenseCapabilitiesReader(PublicKey publicKey) {
         this.publicKey = publicKey;
+    }
+
+    public LicenseInfo getLicenseInfo(byte[] licenseData, String siteNumber, LocalDate date) throws Exception {
+        try {
+            licenseData = this.decipherLicenseData(licenseData, siteNumber);
+        } catch (Exception e) {
+            log.error("Error: license could not be deciphered with message:{}", e.getMessage(), e);
+            return null;
+        }
+
+        byte[] license = extractLicenseData(licenseData);
+        byte[] signedData = extractSignedLicenseData(licenseData);
+
+        Properties licenseProperties = new Properties();
+        ByteArrayInputStream bio = new ByteArrayInputStream(license);
+        licenseProperties.load(bio);
+
+        Signature signature = Signature.getInstance("SHA256withRSA");
+        signature.initVerify(publicKey);
+        signature.update(license);
+
+        return extractPropertiesIntoLicenseInfo(licenseProperties, signature, signedData, date);
     }
 
     private byte[] decipherLicenseData(byte[] licenseData, String siteNumber) throws
@@ -76,6 +100,10 @@ public class LicenseCapabilitiesReader {
         String licenseDestroyServerOnFailure = licenseProperties.getProperty("proxy.license.destroy-server-on-failure",  // never happens
                 "sas-delete-repository " + signature.verify(signedData));
 
+        return buildLicenseInfo(date, licenseDateEndString, licenseDateStartString, licenseSiteNumber, licenseCapabilityLevels, licenseDisableAllChecks, licenseDestroyServerOnFailure);
+    }
+
+    private LicenseInfo buildLicenseInfo(LocalDate date, String licenseDateEndString, String licenseDateStartString, String licenseSiteNumber, String licenseCapabilityLevels, String licenseDisableAllChecks, String licenseDestroyServerOnFailure) {
         LicenseInfo licenseInfo = LicenseInfo.builder()
                 .siteNumber(licenseSiteNumber)
                 .capabilityLevel(licenseCapabilityLevels)
@@ -90,29 +118,7 @@ public class LicenseCapabilitiesReader {
         accumulatedLicense *= 25756673; // 1100010010000010000000001 - preserves lower 10 bits
         List<LicenseCapabilities> licenseCapabilities = LicenseChecker.getCapabilities(accumulatedLicense);
         licenseInfo.setLicenseCapabilities(licenseCapabilities);
-
         return licenseInfo;
-    }
-
-    public LicenseInfo getLicenseInfo(byte[] licenseData, String siteNumber, LocalDate date) throws Exception {
-        try {
-            licenseData = this.decipherLicenseData(licenseData, siteNumber);
-        } catch (Exception e) {
-            return null;
-        }
-
-        byte[] license = extractLicenseData(licenseData);
-        byte[] signedData = extractSignedLicenseData(licenseData);
-
-        Properties licenseProperties = new Properties();
-        ByteArrayInputStream bio = new ByteArrayInputStream(license);
-        licenseProperties.load(bio);
-
-        Signature signature = Signature.getInstance("SHA256withRSA");
-        signature.initVerify(publicKey);
-        signature.update(license);
-
-        return extractPropertiesIntoLicenseInfo(licenseProperties, signature, signedData, date);
     }
 
     public int readLicenseCapabilities(LicenseInfo licenseInfo, String siteNumber, LocalDate sasDate) {
