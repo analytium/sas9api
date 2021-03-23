@@ -21,7 +21,13 @@ public class LicenseCheckerFacade {
         checkLicense(multiplier, targetLevel, licenseChecker);
     }
 
-    public void checkLicense(Integer multiplier, Integer targetLevel, LicenseChecker licenseChecker) throws Exception {
+    public List<LicenseInfo> getLicenseCapabilities(Integer multiplier, Integer targetLevel) throws Exception {
+        final LicenseChecker licenseChecker = licenseCheckerFactory.getLicenseChecker();
+        checkLicense(multiplier, targetLevel, licenseChecker);
+        return licenseChecker.getLicenseInfo();
+    }
+
+    private void checkLicense(Integer multiplier, Integer targetLevel, LicenseChecker licenseChecker) throws Exception {
         String licenseCheckerErrors = licenseChecker.getErrors();
 
         if (StringUtils.hasLength(licenseCheckerErrors))
@@ -29,11 +35,5 @@ public class LicenseCheckerFacade {
 
         if (!licenseChecker.check(multiplier, targetLevel))
             throw new Exception(INVALID_LICENSE_ERROR_MESSAGE);
-    }
-
-    public List<LicenseInfo> getLicenseCapabilities(Integer multiplier, Integer targetLevel) throws Exception {
-        final LicenseChecker licenseChecker = licenseCheckerFactory.getLicenseChecker();
-        checkLicense(multiplier, targetLevel, licenseChecker);
-        return licenseChecker.getLicenseInfo();
     }
 }
