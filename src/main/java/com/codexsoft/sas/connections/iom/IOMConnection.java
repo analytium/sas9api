@@ -27,33 +27,37 @@ public class IOMConnection implements AutoCloseable {
 
     public MdFactory getMdFactory() throws Exception {
         if (mdFactory == null) {
-            try {
-                mdFactory = new MdFactoryImpl(true);
-                MdOMRConnection omrConnection = mdFactory.getConnection();
-                omrConnection.makeOMRConnection(
-                        connection.getHost(),
-                        Integer.toString(connection.getPort()),
-                        connection.getUserName(),
-                        connection.getPassword()
-                );
-            } catch (MdException e) {
-                log.error("Error occurred while connecting to SAS: {}", e.getMessage(), e);
-
-                Throwable t = e.getCause();
-                if (t == null) {
-                    String ErrorType = e.getSASMessageSeverity();
-                    String ErrorMsg = e.getSASMessage();
-                    String causeMsg = "";
-                    if (t instanceof org.omg.CORBA.COMM_FAILURE || t instanceof org.omg.CORBA.NO_PERMISSION) {
-                        causeMsg = e.getLocalizedMessage();
-                    }
-                    throw new Exception(ErrorType + ": " + ErrorMsg + "; " + causeMsg);
-                } else {
-                    throw new Exception(e.getLocalizedMessage());
-                }
-            }
+            makeMdOMRConnection();
         }
         return mdFactory;
+    }
+
+    public void makeMdOMRConnection() throws Exception {
+        try {
+            mdFactory = new MdFactoryImpl(true);
+            MdOMRConnection omrConnection = mdFactory.getConnection();
+            omrConnection.makeOMRConnection(
+                    connection.getHost(),
+                    Integer.toString(connection.getPort()),
+                    connection.getUserName(),
+                    connection.getPassword()
+            );
+        } catch (MdException e) {
+            log.error("Error occurred while connecting to SAS: {}", e.getMessage(), e);
+
+            Throwable t = e.getCause();
+            if (t == null) {
+                String ErrorType = e.getSASMessageSeverity();
+                String ErrorMsg = e.getSASMessage();
+                String causeMsg = "";
+                if (t instanceof org.omg.CORBA.COMM_FAILURE || t instanceof org.omg.CORBA.NO_PERMISSION) {
+                    causeMsg = e.getLocalizedMessage();
+                }
+                throw new Exception(ErrorType + ": " + ErrorMsg + "; " + causeMsg);
+            } else {
+                throw new Exception(e.getLocalizedMessage());
+            }
+        }
     }
 
     public void close() throws RemoteException {
