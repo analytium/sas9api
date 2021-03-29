@@ -14,6 +14,8 @@ public class ProxyConfigModel {
     private SASConfigModel sas;
     private String defaultWorkspaceServerName;
     private List<ServerConfigModel> servers;
+    private boolean apikeyEnabled;
+    private boolean basicAuthEnabled;
 
     private ServerConfigModel getServerByName(String serverName) throws Exception {
         return servers.stream()
@@ -45,8 +47,8 @@ public class ProxyConfigModel {
                 user.getName(),
                 user.getPassword(),
                 user.getKey(),
-                server.isApikeyEnabled(),
-                server.isBasicAuthEnabled()
+                apikeyEnabled,
+                basicAuthEnabled
         );
     }
 }
