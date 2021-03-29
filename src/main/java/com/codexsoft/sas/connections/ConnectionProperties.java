@@ -18,7 +18,7 @@ public class ConnectionProperties {
     private boolean apikeyEnabled;
     private boolean basicAuthEnabled;
 
-    @ConstructorProperties({"host", "port", "userName", "password", "key", "apikeyEnabled"})
+    @ConstructorProperties({"host", "port", "userName", "password", "key", "apikeyEnabled", "basicAuthEnabled"})
     public ConnectionProperties(String host, int port, String userName, String password, String key, boolean apikeyEnabled, boolean basicAuthEnabled) {
         this.host = host;
         this.port = port;

@@ -14,6 +14,9 @@ public class ProxyConfigModel {
     private SASConfigModel sas;
     private String defaultWorkspaceServerName;
     private List<ServerConfigModel> servers;
+    private boolean apikeyEnabled;
+    private boolean basicAuthEnabled;
+    private ConnectionProperties connectionProperties;
 
     private ServerConfigModel getServerByName(String serverName) throws Exception {
         return servers.stream()
@@ -27,26 +30,58 @@ public class ProxyConfigModel {
     }
 
     public ConnectionProperties getConnection(String serverName, String userName) throws Exception {
+        if (connectionProperties == null)
+            return getConnectionProperties(serverName, userName);
+
+        ServerConfigModel server;
+        server = getServerConfigModelByNameOrDefault(serverName);
+        return new ConnectionProperties(
+                server.getHost(),
+                server.getPort(),
+                connectionProperties.getUserName(),
+                connectionProperties.getPassword(),
+                connectionProperties.getKey(),
+                apikeyEnabled,
+                basicAuthEnabled);
+    }
+
+    private ConnectionProperties getConnectionProperties(String serverName, String userName) throws Exception {
         ServerConfigModel server;
         ServerConfigModel.UsersConfigModel user;
-        if (serverName == null) {
-            server = getServers().get(0);
-        } else {
-            server = getServerByName(serverName);
-        }
+        server = getServerConfigModelByNameOrDefault(serverName);
+        user = getUsersConfigModelByNameOrDefault(userName, server);
+
+        return new ConnectionProperties(
+            server.getHost(),
+            server.getPort(),
+            user.getName(),
+            user.getPassword(),
+            user.getKey(),
+            apikeyEnabled,
+            basicAuthEnabled);
+    }
+
+    private ServerConfigModel.UsersConfigModel getUsersConfigModelByNameOrDefault(String userName, ServerConfigModel server) throws Exception {
+        ServerConfigModel.UsersConfigModel user;
         if (userName == null) {
             user = server.getUsers().get(0);
         } else {
             user = server.getUser(userName);
         }
-        return new ConnectionProperties(
-                server.getHost(),
-                server.getPort(),
-                user.getName(),
-                user.getPassword(),
-                user.getKey(),
-                server.isApikeyEnabled(),
-                server.isBasicAuthEnabled()
-        );
+        return user;
+    }
+
+    private ServerConfigModel getServerConfigModelByNameOrDefault(String serverName) throws Exception {
+        ServerConfigModel server;
+        if (serverName == null) {
+            server = getServers().get(0);
+        } else {
+            server = getServerByName(serverName);
+        }
+        return server;
+    }
+
+    public void setConnection(ConnectionProperties connectionProperties) {
+        this.connectionProperties = connectionProperties;
     }
 }

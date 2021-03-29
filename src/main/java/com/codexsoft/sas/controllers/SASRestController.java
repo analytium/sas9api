@@ -56,16 +56,17 @@ public class SASRestController {
     private final ConnectionHelpers connectionHelpers;
     private final LicenseCheckerFacade licenseCheckerFacade;
     private final DataSetDataConfigModel dataSetDataConfigModel;
+    private final ProxyConfigModel proxyConfig;
 
-    public SASRestController(ApplicationContext context, ConnectionHelpers connectionHelpers, LicenseCheckerFacade licenseCheckerFacade, DataSetDataConfigModel dataSetDataConfigModel) {
+    public SASRestController(ApplicationContext context, ConnectionHelpers connectionHelpers, LicenseCheckerFacade licenseCheckerFacade, DataSetDataConfigModel dataSetDataConfigModel, ProxyConfigModel proxyConfig) {
         this.context = context;
         this.connectionHelpers = connectionHelpers;
         this.licenseCheckerFacade = licenseCheckerFacade;
         this.dataSetDataConfigModel = dataSetDataConfigModel;
+        this.proxyConfig = proxyConfig;
     }
 
     private ConnectionProperties getConnectionProperties(HttpServletRequest request) throws Exception {
-        ProxyConfigModel proxyConfig = context.getBean(ProxyConfigModel.class);
         String serverName = request.getParameter("serverName");
         String userName = request.getParameter("userName");
         return proxyConfig.getConnection(serverName, userName);

@@ -2,6 +2,7 @@ package com.codexsoft.sas.secure;
 
 import com.codexsoft.sas.config.models.ProxyConfigModel;
 import com.codexsoft.sas.connections.ConnectionProperties;
+import com.codexsoft.sas.connections.iom.IOMConnection;
 import com.codexsoft.sas.models.APIResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -49,25 +50,42 @@ public class AuthRequestsInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
-    private boolean checkBasicAuthentication(String basicAuth, ConnectionProperties connectionProperties, HttpServletResponse response) throws Exception {
-        String base64Credentials = basicAuth.substring("Basic".length()).trim();
-        byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
-        String credentials = new String(credDecoded, StandardCharsets.UTF_8);
-        final String[] values = credentials.split(":", 2);
-        String userPassedUserName = values[0];
-        String userPassedPassword = values[1];
-
-        if (!userPassedUserName.equals(connectionProperties.getUserName()) ||
-                !userPassedPassword.equals(connectionProperties.getPassword()))
-            return buildUnauthorisedHttpResponse(response, UNAUTHORISED_BASIC_ERROR_MESSAGE);
-        else
-            return true;
+    private ConnectionProperties getConnectionProperties(HttpServletRequest request) throws Exception {
+        String serverName = request.getParameter("serverName");
+        String userName = request.getParameter("userName");
+        return proxyConfigModel.getConnection(serverName, userName);
     }
 
     private boolean checkApiKeyAuthentication(String passedApiKey, ConnectionProperties connectionProperties, HttpServletResponse response) throws Exception {
         final String apiKey = connectionProperties.getKey();
         return (StringUtils.hasLength(passedApiKey) && apiKey.equals(passedApiKey)) ||
                 buildUnauthorisedHttpResponse(response, INVALID_API_KEY_ERROR_MESSAGE);
+    }
+
+    private boolean checkBasicAuthentication(String basicAuth, ConnectionProperties connectionProperties, HttpServletResponse response) throws Exception {
+        final String[] values = decodeBasicAuthCredentials(basicAuth);
+        String passedUserName = values[0];
+        String passedPassword = values[1];
+
+        connectionProperties.setUserName(passedUserName);
+        connectionProperties.setPassword(passedPassword);
+        proxyConfigModel.setConnection(connectionProperties);
+
+        try (final IOMConnection iomConnection = new IOMConnection(connectionProperties)) {
+            iomConnection.makeMdOMRConnection();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return buildUnauthorisedHttpResponse(response, UNAUTHORISED_BASIC_ERROR_MESSAGE);
+        }
+        return true;
+    }
+
+    private String[] decodeBasicAuthCredentials(String basicAuth) {
+        String base64Credentials = basicAuth.substring("Basic".length()).trim();
+        byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
+        String credentials = new String(credDecoded, StandardCharsets.UTF_8);
+        final String[] values = credentials.split(":", 2);
+        return values;
     }
 
     private boolean buildUnauthorisedHttpResponse(HttpServletResponse response, String errorMessage) throws Exception {
@@ -88,11 +106,4 @@ public class AuthRequestsInterceptor extends HandlerInterceptorAdapter {
 
         return false;
     }
-
-    private ConnectionProperties getConnectionProperties(HttpServletRequest request) throws Exception {
-        String serverName = request.getParameter("serverName");
-        String userName = request.getParameter("userName");
-        return proxyConfigModel.getConnection(serverName, userName);
-    }
-
 }

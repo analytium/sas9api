@@ -10,8 +10,6 @@ public class ServerConfigModel {
     private String host;
     private int port;
     private List<UsersConfigModel> users;
-    private boolean apikeyEnabled;
-    private boolean basicAuthEnabled;
 
     @Data
     public static class UsersConfigModel {

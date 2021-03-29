@@ -17,10 +17,7 @@ import java.util.List;
 @Component
 @Scope("prototype")
 public class PermissionsDao extends BaseDao {
-    @Autowired
-    private ApplicationContext context;
-
-    private IOMConnection iomConnection;
+    private final IOMConnection iomConnection;
 
     public PermissionsDao(IOMConnection iomConnection) {
         this.iomConnection = iomConnection;

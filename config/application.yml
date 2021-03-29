@@ -38,11 +38,12 @@ proxy:
     sashome: /home/eugene/Documents/SAS/sas-libraries/SASHome
   # Required: default workspace server name
   default_workspace_server_name: SASApp
+  # Optional: SASApi auth methods
+  apikeyEnabled: false
+  basicAuthEnabled: true
   # Required: a list of metadata servers and their connection details
   servers:
     - # server alias name to use in endpoints that require it
-      apikeyEnabled: false
-      basicAuthEnabled: true
       name: test
       # metadata server host address
       host: sas.analytium.co.uk
