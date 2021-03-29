@@ -67,9 +67,7 @@ public class AuthRequestsInterceptor extends HandlerInterceptorAdapter {
         String passedUserName = values[0];
         String passedPassword = values[1];
 
-        connectionProperties.setUserName(passedUserName);
-        connectionProperties.setPassword(passedPassword);
-        proxyConfigModel.setConnection(connectionProperties);
+        overideConnectionProperties(connectionProperties, passedUserName, passedPassword);
 
         try (final IOMConnection iomConnection = new IOMConnection(connectionProperties)) {
             iomConnection.makeMdOMRConnection();
@@ -78,6 +76,12 @@ public class AuthRequestsInterceptor extends HandlerInterceptorAdapter {
             return buildUnauthorisedHttpResponse(response, UNAUTHORISED_BASIC_ERROR_MESSAGE);
         }
         return true;
+    }
+
+    private void overideConnectionProperties(ConnectionProperties connectionProperties, String passedUserName, String passedPassword) {
+        connectionProperties.setUserName(passedUserName);
+        connectionProperties.setPassword(passedPassword);
+        proxyConfigModel.setConnection(connectionProperties);
     }
 
     private String[] decodeBasicAuthCredentials(String basicAuth) {
