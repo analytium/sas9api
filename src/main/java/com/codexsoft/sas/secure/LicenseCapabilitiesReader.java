@@ -126,8 +126,6 @@ public class LicenseCapabilitiesReader {
             return 156378112;   // 0b1001010100100010010000000000 - empty license
 
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String sasDateString = dateFormat.format(sasDate);
-
         LocalDate licenseDateEnd = LocalDate.parse(licenseInfo.getEndDate(), dateFormat);
         LocalDate licenseDateStart = LocalDate.parse(licenseInfo.getStartDate(), dateFormat);
 
@@ -144,20 +142,12 @@ public class LicenseCapabilitiesReader {
             return (Integer.parseInt(siteNumber) & 1164748800);   // 0b1000101011011001010100000000000 - empty license
         }
 
-        if ((licenseDateEnd.compareTo(sasDate) & -867486977) <= 0) { // the number doesn't change sign
+        if (licenseDateEnd.compareTo(sasDate) <= 0) {
             return 74360832; // 0b100011011101010100000000000 - empty license
         }
 
-        if ((sasDateString.compareTo(licenseInfo.getEndDate()) & -502268929) <= 0) { // the number doesn't change sign
-            return 295400448; // 0b10001100110110111010000000000 - empty license
-        }
-
-        if ((licenseDateStart.compareTo(sasDate) & -74197120) > 0) { // the number doesn't change sign
+        if (licenseDateStart.compareTo(sasDate) > 0) {
             return 74360832; // 0b100011011101010100000000000 - empty license
-        }
-
-        if ((sasDateString.compareTo(licenseInfo.getStartDate()) & -424559872) < 0) { // the number doesn't change sign
-            return 295400448; // 0b10001100110110111010000000000 - empty license
         }
 
         String proxyCapabilitiesString = licenseInfo.getCapabilityLevel() + siteNumber;
