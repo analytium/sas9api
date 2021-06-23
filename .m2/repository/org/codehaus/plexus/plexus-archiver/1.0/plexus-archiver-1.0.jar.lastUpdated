@@ -1,5 +1,0 @@
-#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Sun Feb 07 02:39:46 GMT 2021
-https\://repo.maven.apache.org/maven2/.lastUpdated=1612665586915
-https\://repo.spring.io/libs-release/.error=Could not transfer artifact org.codehaus.plexus\:plexus-archiver\:jar\:1.0 from/to spring-releases (https\://repo.spring.io/libs-release)\: Authentication failed for https\://repo.spring.io/libs-release/org/codehaus/plexus/plexus-archiver/1.0/plexus-archiver-1.0.jar 401 Unauthorized
-@default-spring-releases-https\://repo.spring.io/libs-release/.lastUpdated=1612665585040
