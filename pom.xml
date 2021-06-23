@@ -203,6 +203,7 @@
 	https://www.guardsquare.com/en/proguard/manual/examples
 	-->
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -225,7 +226,7 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.0.2</version>
@@ -242,7 +243,7 @@
 
 					</archive>
 				</configuration>
-			</plugin>
+			</plugin> -->
 
 			<!--<plugin>-->
 			<!--<groupId>com.github.wvengen</groupId>-->
