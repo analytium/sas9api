@@ -10,3 +10,6 @@ target/
 .vscode
 app.log
 app.log.*
+.idea/
+*.iml
+

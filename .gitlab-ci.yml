@@ -1,0 +1,35 @@
+variables:
+  #SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+  MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
+  GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+
+stages:
+  - build
+  - deploy
+
+maven-build:
+  stage: build
+  image: maven:3.6-jdk-8
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .m2/repository
+  artifacts:
+    paths:
+      - src
+      - target
+  script: |
+    mvn -q -B dependency:go-offline
+    mvn -q -B clean package
+  only:
+    - merge_requests
+    - master
+    - branches
+
+deploy-repo:
+  stage: deploy
+  image: maven:3.6-jdk-8
+  script:
+    - 'mvn deploy -s ci_settings.xml'
+  only:
+    - master
