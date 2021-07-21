@@ -1,5 +1,0 @@
-#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Sun Feb 07 02:39:30 GMT 2021
-https\://repo.maven.apache.org/maven2/.lastUpdated=1612665570501
-https\://repo.spring.io/libs-release/.error=Could not transfer artifact oro\:oro\:pom\:2.0.8 from/to spring-releases (https\://repo.spring.io/libs-release)\: Authentication failed for https\://repo.spring.io/libs-release/oro/oro/2.0.8/oro-2.0.8.pom 401 Unauthorized
-@default-spring-releases-https\://repo.spring.io/libs-release/.lastUpdated=1612665570483
