@@ -25,14 +25,13 @@ import com.codexsoft.sas.connections.workspace.models.SASLanguageResponse;
 import com.codexsoft.sas.models.APIResponse;
 import com.codexsoft.sas.models.LibraryParams;
 import com.codexsoft.sas.models.ServerConfiguration;
-import com.codexsoft.sas.secure.LicenseCheckerFacade;
-import com.codexsoft.sas.secure.models.LicenseInfo;
 import com.codexsoft.sas.utils.ResponseUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
@@ -45,26 +44,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-
 @RestController
 @RequestMapping("/sas")
 @Api(value = "SAS", description = "Endpoint for SAS server")
 @Slf4j
+@RequiredArgsConstructor
 public class SASRestController {
 
     private final ApplicationContext context;
     private final ConnectionHelpers connectionHelpers;
-    private final LicenseCheckerFacade licenseCheckerFacade;
     private final DataSetDataConfigModel dataSetDataConfigModel;
     private final ProxyConfigModel proxyConfig;
-
-    public SASRestController(ApplicationContext context, ConnectionHelpers connectionHelpers, LicenseCheckerFacade licenseCheckerFacade, DataSetDataConfigModel dataSetDataConfigModel, ProxyConfigModel proxyConfig) {
-        this.context = context;
-        this.connectionHelpers = connectionHelpers;
-        this.licenseCheckerFacade = licenseCheckerFacade;
-        this.dataSetDataConfigModel = dataSetDataConfigModel;
-        this.proxyConfig = proxyConfig;
-    }
 
     private ConnectionProperties getConnectionProperties(HttpServletRequest request) throws Exception {
         String serverName = request.getParameter("serverName");
@@ -77,17 +67,14 @@ public class SASRestController {
     @GetMapping()
     public ResponseEntity<APIResponse<ServerConfiguration>> sasMetadataInfo(HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(1147905, 1);
+            // licenseCheckerFacade.checkLicense(1147905, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (val connection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, connection);
-                return ServerConfiguration.builder()
-                        .metadataHost(connectionProperties.getHost())
-                        .metadataPort(connectionProperties.getPort())
-                        .metadataServerName("Test")     // TODO: remove test
-                        .repositories(repositoriesDao.getRepositories())
-                        .build();
+                return ServerConfiguration.builder().metadataHost(connectionProperties.getHost())
+                        .metadataPort(connectionProperties.getPort()).metadataServerName("Test") // TODO: remove test
+                        .repositories(repositoriesDao.getRepositories()).build();
             }
         });
     }
@@ -95,12 +82,10 @@ public class SASRestController {
     @ApiOperation(value = "Gets list of available Workspace servers and their connections from metadata server")
     @GetMapping(value = "/servers")
     public ResponseEntity<APIResponse<List<ServerComponent>>> getWorkspaceServers(
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (val connection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -115,15 +100,12 @@ public class SASRestController {
     @ApiOperation(value = "Gets Workspace server information and its connections from metadata server by name")
     @GetMapping(value = "/servers/{serverName}")
     public ResponseEntity<APIResponse<ServerComponent>> getServer(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (val connection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -135,93 +117,71 @@ public class SASRestController {
         });
     }
 
-    //  Libraries endpoints
+    // Libraries endpoints
 
     private List<Library> getServerLibraries(JDBCConnection jdbcConnection) throws Exception {
         LibraryDao libraryDao = context.getBean(LibraryDao.class, jdbcConnection);
         return libraryDao.getLibraries();
     }
 
-    @ApiOperation(
-            value = "Gets list of available libraries for workspace server by server name",
-            notes = "Uses first available connection from connection list for supplied server name. Note: the method doesn't populate ID field in Libraries object"
-    )
+    @ApiOperation(value = "Gets list of available libraries for workspace server by server name", notes = "Uses first available connection from connection list for supplied server name. Note: the method doesn't populate ID field in Libraries object")
     @GetMapping(value = "/servers/{serverName}/libraries")
     public ResponseEntity<APIResponse<List<Library>>> getLibrariesByServer(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
-                    connectionProperties, serverName, repositoryName
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
+                    serverName, repositoryName)) {
                 return getServerLibraries(jdbcConnection);
             }
         });
     }
 
-    @ApiOperation(
-            value = "Get list of libraries for workspace server using direct connection information",
-            notes = "Note: the method doesn't populate ID field in Libraries object"
-    )
+    @ApiOperation(value = "Get list of libraries for workspace server using direct connection information", notes = "Note: the method doesn't populate ID field in Libraries object")
     @GetMapping(value = "/libraries")
     public ResponseEntity<APIResponse<List<Library>>> getLibraries(
-            @ApiParam(value = "Workspace server host URL")
-            @RequestParam(value = "serverUrl", required = false) String serverUrl,
+            @ApiParam(value = "Workspace server host URL") @RequestParam(value = "serverUrl", required = false) String serverUrl,
 
-            @ApiParam(value = "Workspace server port")
-            @RequestParam(value = "serverPort", required = false) String serverPort,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
-                    connectionProperties, serverUrl, serverPort
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
+                    serverUrl, serverPort)) {
                 return getServerLibraries(jdbcConnection);
             }
         });
     }
 
-    //  Library endpoints
+    // Library endpoints
 
     private Library getLibrary(JDBCConnection jdbcConnection, String libraryName) throws Exception {
         LibraryDao libraryDao = context.getBean(LibraryDao.class, jdbcConnection);
         return libraryDao.getLibraryByName(libraryName);
     }
 
-    @ApiOperation(
-            value = "Gets library information for workspace server by library name and server name",
-            notes = "Uses first available connection from connection list for supplied server name"
-    )
+    @ApiOperation(value = "Gets library information for workspace server by library name and server name", notes = "Uses first available connection from connection list for supplied server name")
     @GetMapping(value = "/servers/{serverName}/libraries/{libraryName}")
     public ResponseEntity<APIResponse<Library>> getLibraryByServer(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
-                    connectionProperties, serverName, repositoryName
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
+                    serverName, repositoryName)) {
                 return getLibrary(jdbcConnection, libraryName);
             }
         });
@@ -230,23 +190,18 @@ public class SASRestController {
     @ApiOperation(value = "Gets library information for workspace server by library name using direct connection information")
     @GetMapping(value = "/libraries/{libraryName}")
     public ResponseEntity<APIResponse<Library>> getLibrary(
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Workspace server host URL")
-            @RequestParam(value = "serverUrl", required = false) String serverUrl,
+            @ApiParam(value = "Workspace server host URL") @RequestParam(value = "serverUrl", required = false) String serverUrl,
 
-            @ApiParam(value = "Workspace server port")
-            @RequestParam(value = "serverPort", required = false) String serverPort,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
-                    connectionProperties, serverUrl, serverPort
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
+                    serverUrl, serverPort)) {
                 return getLibrary(jdbcConnection, libraryName);
             }
         });
@@ -261,30 +216,22 @@ public class SASRestController {
         return dataSetDao.getDatasets(library.getLibname());
     }
 
-    @ApiOperation(
-            value = "Gets list of datasets for specific library by library name and server name",
-            notes = "Uses first available connection from connection list for supplied server name. "
-                  + "This method doesn't populate 'columns' field in response items. Use a method for specific dataset to get it populated."
-    )
+    @ApiOperation(value = "Gets list of datasets for specific library by library name and server name", notes = "Uses first available connection from connection list for supplied server name. "
+            + "This method doesn't populate 'columns' field in response items. Use a method for specific dataset to get it populated.")
     @GetMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets")
     public ResponseEntity<APIResponse<List<DataSet>>> getDatasetsByServer(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
-                    connectionProperties, serverName, repositoryName
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
+                    serverName, repositoryName)) {
                 return getDatasets(jdbcConnection, libraryName);
             }
         });
@@ -293,31 +240,27 @@ public class SASRestController {
     @ApiOperation(value = "Gets list of datasets for specific library by library name using direct connection information")
     @GetMapping(value = "/libraries/{libraryName}/datasets")
     public ResponseEntity<APIResponse<List<DataSet>>> getDatasets(
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Workspace server host URL")
-            @RequestParam(value = "serverUrl", required = false) String serverUrl,
+            @ApiParam(value = "Workspace server host URL") @RequestParam(value = "serverUrl", required = false) String serverUrl,
 
-            @ApiParam(value = "Workspace server port")
-            @RequestParam(value = "serverPort", required = false) String serverPort,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
-                    connectionProperties, serverUrl, serverPort
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
+                    serverUrl, serverPort)) {
                 return getDatasets(jdbcConnection, libraryName);
             }
         });
     }
 
-    //  Dataset details endpoints
+    // Dataset details endpoints
 
-    private DataSet getDatasetDetails(JDBCConnection jdbcConnection, String libraryName, String datasetName) throws Exception {
+    private DataSet getDatasetDetails(JDBCConnection jdbcConnection, String libraryName, String datasetName)
+            throws Exception {
         Library library = getLibrary(jdbcConnection, libraryName);
 
         DataSetDao dataSetDao = context.getBean(DataSetDao.class, jdbcConnection);
@@ -331,32 +274,23 @@ public class SASRestController {
         return dataset;
     }
 
-    @ApiOperation(
-            value = "Gets dataset information for specific dataset by dataset name, library name and server name",
-            notes = "Uses first available connection from connection list for supplied server name"
-    )
+    @ApiOperation(value = "Gets dataset information for specific dataset by dataset name, library name and server name", notes = "Uses first available connection from connection list for supplied server name")
     @GetMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}")
     public ResponseEntity<APIResponse<DataSet>> getDatasetDetailsByServer(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Dataset name")
-            @PathVariable String datasetName,
+            @ApiParam(value = "Dataset name") @PathVariable String datasetName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
-                    connectionProperties, serverName, repositoryName
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
+                    serverName, repositoryName)) {
                 return getDatasetDetails(jdbcConnection, libraryName, datasetName);
             }
         });
@@ -365,26 +299,20 @@ public class SASRestController {
     @ApiOperation(value = "Gets dataset information for specific dataset by dataset name and library name using direct connection information")
     @GetMapping(value = "/libraries/{libraryName}/datasets/{datasetName}")
     public ResponseEntity<APIResponse<DataSet>> getDatasetDetails(
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Dataset name")
-            @PathVariable String datasetName,
+            @ApiParam(value = "Dataset name") @PathVariable String datasetName,
 
-            @ApiParam(value = "Workspace server host URL")
-            @RequestParam(value = "serverUrl", required = false) String serverUrl,
+            @ApiParam(value = "Workspace server host URL") @RequestParam(value = "serverUrl", required = false) String serverUrl,
 
-            @ApiParam(value = "Workspace server port")
-            @RequestParam(value = "serverPort", required = false) String serverPort,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
-                    connectionProperties, serverUrl, serverPort
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
+                    serverUrl, serverPort)) {
                 return getDatasetDetails(jdbcConnection, libraryName, datasetName);
             }
         });
@@ -392,14 +320,8 @@ public class SASRestController {
 
     // Dataset data endpoints
 
-    private List<Map<String, Object>> getDatasetData(
-            JDBCConnection jdbcConnection,
-            String libraryName,
-            String datasetName,
-            String filterJson,
-            int limit,
-            int offset
-    ) throws Exception {
+    private List<Map<String, Object>> getDatasetData(JDBCConnection jdbcConnection, String libraryName,
+            String datasetName, String filterJson, int limit, int offset) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> filter;
         if (filterJson != null && filterJson.length() > 0) {
@@ -408,45 +330,34 @@ public class SASRestController {
             filter = null;
         }
         Map<String, Object> finalFilter = filter;
-        DataSetDataDao dataSetDataDao = (DataSetDataDao) context.getBean("DataSetDataDao", dataSetDataConfigModel, jdbcConnection);
+        DataSetDataDao dataSetDataDao = (DataSetDataDao) context.getBean("DataSetDataDao", dataSetDataConfigModel,
+                jdbcConnection);
         return dataSetDataDao.getData(libraryName, datasetName, finalFilter, limit, offset);
     }
 
-    @ApiOperation(
-            value = "Retrieves data from dataset by dataset name, library name and server name",
-            notes = "Uses first available connection from connection list for supplied server name"
-    )
+    @ApiOperation(value = "Retrieves data from dataset by dataset name, library name and server name", notes = "Uses first available connection from connection list for supplied server name")
     @GetMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<List<Map<String, Object>>>> getDatasetDataByServer(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Dataset name")
-            @PathVariable String datasetName,
+            @ApiParam(value = "Dataset name") @PathVariable String datasetName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
 
-            @ApiParam(value = "Number of records to retrieve. Value '0' means default value. Maximum value is 10000", defaultValue = "100")
-            @RequestParam(value = "limit", defaultValue = "0") int limit,
+            @ApiParam(value = "Number of records to retrieve. Value '0' means default value. Maximum value is 10000", defaultValue = "100") @RequestParam(value = "limit", defaultValue = "0") int limit,
 
-            @ApiParam(value = "Dataset record offset", defaultValue = "0")
-            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @ApiParam(value = "Dataset record offset", defaultValue = "0") @RequestParam(value = "offset", defaultValue = "0") int offset,
 
-            @ApiParam(value = "Dataset filter in JSON format (example: {\"Sex\": \"M\", \"Age\": 14}). Must be URL-encoded")
-            @RequestParam(value = "filter", required = false) String filterJson,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Dataset filter in JSON format (example: {\"Sex\": \"M\", \"Age\": 14}). Must be URL-encoded") @RequestParam(value = "filter", required = false) String filterJson,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
-                    connectionProperties, serverName, repositoryName
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
+                    serverName, repositoryName)) {
                 return getDatasetData(jdbcConnection, libraryName, datasetName, filterJson, limit, offset);
             }
         });
@@ -455,85 +366,60 @@ public class SASRestController {
     @ApiOperation(value = "Retrieves data from dataset by dataset name and library name using direct connection information")
     @GetMapping(value = "/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<List<Map<String, Object>>>> getDatasetData(
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Dataset name")
-            @PathVariable String datasetName,
+            @ApiParam(value = "Dataset name") @PathVariable String datasetName,
 
-            @ApiParam(value = "Workspace server host URL")
-            @RequestParam(value = "serverUrl", required = false) String serverUrl,
+            @ApiParam(value = "Workspace server host URL") @RequestParam(value = "serverUrl", required = false) String serverUrl,
 
-            @ApiParam(value = "Workspace server port")
-            @RequestParam(value = "serverPort", required = false) String serverPort,
+            @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
 
-            @ApiParam(value = "Number of records to retrieve. Value '0' means default value. Maximum value is 10000", defaultValue = "100")
-            @RequestParam(value = "limit", defaultValue = "0") int limit,
+            @ApiParam(value = "Number of records to retrieve. Value '0' means default value. Maximum value is 10000", defaultValue = "100") @RequestParam(value = "limit", defaultValue = "0") int limit,
 
-            @ApiParam(value = "Dataset record offset", defaultValue = "0")
-            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @ApiParam(value = "Dataset record offset", defaultValue = "0") @RequestParam(value = "offset", defaultValue = "0") int offset,
 
-            @ApiParam(value = "Dataset filter JSON")
-            @RequestParam(value = "filter", required = false) String filterJson,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Dataset filter JSON") @RequestParam(value = "filter", required = false) String filterJson,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
-                    connectionProperties, serverUrl, serverPort
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
+                    serverUrl, serverPort)) {
                 return getDatasetData(jdbcConnection, libraryName, datasetName, filterJson, limit, offset);
             }
         });
     }
 
-    private DMLResponse putDataSetData(
-            JDBCConnection jdbcConnection,
-            String libraryName,
-            String datasetName,
-            List<Map<String, Object>> data,
-            String byKey
-    ) throws Exception {
+    private DMLResponse putDataSetData(JDBCConnection jdbcConnection, String libraryName, String datasetName,
+            List<Map<String, Object>> data, String byKey) throws Exception {
         DataSetDataDao dao = new DataSetDataDao(dataSetDataConfigModel, jdbcConnection);
         int[] recordsAffected = dao.replaceData(libraryName, datasetName, data, byKey);
-        
-        return DMLResponse.builder()
-                .itemsInserted(recordsAffected[0])
-                .itemsRemoved(recordsAffected[1])
-                .itemsUpdated(0)
+
+        return DMLResponse.builder().itemsInserted(recordsAffected[0]).itemsRemoved(recordsAffected[1]).itemsUpdated(0)
                 .build();
     }
 
     @ApiOperation(value = "Insert or replaces data into dataset by key")
     @PutMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<DMLResponse>> putDataSetDataByServer(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Dataset name")
-            @PathVariable String datasetName,
+            @ApiParam(value = "Dataset name") @PathVariable String datasetName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
 
-            @ApiParam(value = "Dataset key for record matching")
-            @RequestParam(value = "byKey", required = false) String byKey,
+            @ApiParam(value = "Dataset key for record matching") @RequestParam(value = "byKey", required = false) String byKey,
 
-            @RequestBody List<Map<String, Object>> data,
-            HttpServletRequest request
-    ) {
+            @RequestBody List<Map<String, Object>> data, HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
-                    connectionProperties, serverName, repositoryName
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
+                    serverName, repositoryName)) {
                 return putDataSetData(jdbcConnection, libraryName, datasetName, data, byKey);
             }
         });
@@ -542,76 +428,54 @@ public class SASRestController {
     @ApiOperation(value = "Insert or replaces data into dataset by key")
     @PutMapping(value = "/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<DMLResponse>> putDataSetData(
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Dataset name")
-            @PathVariable String datasetName,
+            @ApiParam(value = "Dataset name") @PathVariable String datasetName,
 
-            @ApiParam(value = "Workspace server host URL")
-            @RequestParam(value = "serverUrl", required = false) String serverUrl,
+            @ApiParam(value = "Workspace server host URL") @RequestParam(value = "serverUrl", required = false) String serverUrl,
 
-            @ApiParam(value = "Workspace server port")
-            @RequestParam(value = "serverPort", required = false) String serverPort,
+            @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
 
-            @ApiParam(value = "Dataset key for record matching")
-            @RequestParam(value = "byKey", required = false) String byKey,
+            @ApiParam(value = "Dataset key for record matching") @RequestParam(value = "byKey", required = false) String byKey,
 
-            @RequestBody List<Map<String, Object>> data,
-            HttpServletRequest request
-    ) {
+            @RequestBody List<Map<String, Object>> data, HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
-                    connectionProperties, serverUrl, serverPort
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
+                    serverUrl, serverPort)) {
                 return putDataSetData(jdbcConnection, libraryName, datasetName, data, byKey);
             }
         });
     }
 
-    private DMLResponse postDataSetData(
-            JDBCConnection jdbcConnection,
-            String libraryName,
-            String datasetName,
-            List<Map<String, Object>> data
-    ) throws Exception {
+    private DMLResponse postDataSetData(JDBCConnection jdbcConnection, String libraryName, String datasetName,
+            List<Map<String, Object>> data) throws Exception {
         DataSetDataDao dao = new DataSetDataDao(dataSetDataConfigModel, jdbcConnection);
         int[] recordsAffected = dao.replaceDataAll(libraryName, datasetName, data);
-        return DMLResponse.builder()
-                .itemsInserted(recordsAffected[0])
-                .itemsRemoved(recordsAffected[1])
-                .itemsUpdated(0)
+        return DMLResponse.builder().itemsInserted(recordsAffected[0]).itemsRemoved(recordsAffected[1]).itemsUpdated(0)
                 .build();
     }
 
     @ApiOperation(value = "Replaces all data in dataset with input data")
     @PostMapping(value = "/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<DMLResponse>> postDataSetData(
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Dataset name")
-            @PathVariable String datasetName,
+            @ApiParam(value = "Dataset name") @PathVariable String datasetName,
 
-            @ApiParam(value = "Workspace server host URL")
-            @RequestParam(value = "serverUrl", required = false) String serverUrl,
+            @ApiParam(value = "Workspace server host URL") @RequestParam(value = "serverUrl", required = false) String serverUrl,
 
-            @ApiParam(value = "Workspace server port")
-            @RequestParam(value = "serverPort", required = false) String serverPort,
+            @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
 
-            @RequestBody List<Map<String, Object>> data,
-            HttpServletRequest request
-    ) {
+            @RequestBody List<Map<String, Object>> data, HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
-                    connectionProperties, serverUrl, serverPort
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
+                    serverUrl, serverPort)) {
                 return postDataSetData(jdbcConnection, libraryName, datasetName, data);
             }
         });
@@ -620,70 +484,50 @@ public class SASRestController {
     @ApiOperation(value = "Replaces all data in dataset with input data")
     @PostMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<DMLResponse>> postDataSetDataByServer(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Dataset name")
-            @PathVariable String datasetName,
+            @ApiParam(value = "Dataset name") @PathVariable String datasetName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
 
-            @RequestBody List<Map<String, Object>> data,
-            HttpServletRequest request
-    ) {
+            @RequestBody List<Map<String, Object>> data, HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
-                    connectionProperties, serverName, repositoryName
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
+                    serverName, repositoryName)) {
                 return postDataSetData(jdbcConnection, libraryName, datasetName, data);
             }
         });
     }
 
-    private DMLResponse deleteDataset(
-            JDBCConnection jdbcConnection,
-            String libraryName,
-            String datasetName
-    ) throws Exception {
+    private DMLResponse deleteDataset(JDBCConnection jdbcConnection, String libraryName, String datasetName)
+            throws Exception {
         DataSetDao dao = new DataSetDao(jdbcConnection);
         dao.deleteDataset(libraryName, datasetName);
-        return DMLResponse.builder()
-        		.itemsInserted(0)
-                .itemsRemoved(1)
-                .itemsUpdated(0)
-                .build();
+        return DMLResponse.builder().itemsInserted(0).itemsRemoved(1).itemsUpdated(0).build();
     }
 
     @ApiOperation(value = "Deletes dataset from library")
     @DeleteMapping(value = "/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<DMLResponse>> deleteDataset(
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Dataset name")
-            @PathVariable String datasetName,
+            @ApiParam(value = "Dataset name") @PathVariable String datasetName,
 
-            @ApiParam(value = "Workspace server host URL")
-            @RequestParam(value = "serverUrl", required = false) String serverUrl,
+            @ApiParam(value = "Workspace server host URL") @RequestParam(value = "serverUrl", required = false) String serverUrl,
 
-            @ApiParam(value = "Workspace server port")
-            @RequestParam(value = "serverPort", required = false) String serverPort,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(
-                    connectionProperties, serverUrl, serverPort
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
+                    serverUrl, serverPort)) {
                 return deleteDataset(jdbcConnection, libraryName, datasetName);
             }
         });
@@ -692,26 +536,20 @@ public class SASRestController {
     @ApiOperation(value = "Deletes dataset from library")
     @DeleteMapping(value = "/servers/{serverName}/libraries/{libraryName}/datasets/{datasetName}/data")
     public ResponseEntity<APIResponse<DMLResponse>> deleteDatasetByServer(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Library name")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name") @PathVariable String libraryName,
 
-            @ApiParam(value = "Dataset name")
-            @PathVariable String datasetName,
+            @ApiParam(value = "Dataset name") @PathVariable String datasetName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
-            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(
-                    connectionProperties, serverName, repositoryName
-            )) {
+            try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
+                    serverName, repositoryName)) {
                 return deleteDataset(jdbcConnection, libraryName, datasetName);
             }
         });
@@ -719,11 +557,7 @@ public class SASRestController {
 
     // Users
 
-    private Person getUserByName(
-            IOMConnection iomConnection,
-            String repositoryName,
-            String userName
-    ) throws Exception {
+    private Person getUserByName(IOMConnection iomConnection, String repositoryName, String userName) throws Exception {
         val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
         val repository = repositoriesDao.getRepositoryByName(repositoryName);
         val personsDao = context.getBean(PersonsDao.class, iomConnection);
@@ -733,12 +567,10 @@ public class SASRestController {
     @ApiOperation(value = "Gets server users and its identities")
     @GetMapping(value = "/meta/users")
     public ResponseEntity<APIResponse<List<Person>>> getUsers(
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -753,15 +585,12 @@ public class SASRestController {
     @ApiOperation(value = "Gets server user and its identities by name")
     @GetMapping(value = "/meta/users/{userName}")
     public ResponseEntity<APIResponse<Person>> getUserByName(
-            @ApiParam("User name to search")
-            @PathVariable String userName,
+            @ApiParam("User name to search") @PathVariable String userName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -773,12 +602,10 @@ public class SASRestController {
     @ApiOperation(value = "Gets configured user information and its identities")
     @GetMapping(value = "/user")
     public ResponseEntity<APIResponse<Person>> getCurrentUser(
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -792,12 +619,10 @@ public class SASRestController {
     @ApiOperation(value = "Get groups and their associated groups and users")
     @GetMapping(value = "/meta/groups")
     public ResponseEntity<APIResponse<List<IdentityGroup>>> getGroups(
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -812,15 +637,12 @@ public class SASRestController {
     @ApiOperation(value = "Get group and its associated groups and users by group name")
     @GetMapping(value = "/meta/groups/{groupName}")
     public ResponseEntity<APIResponse<IdentityGroup>> getGroupByName(
-            @ApiParam("Group name to search")
-            @PathVariable String groupName,
+            @ApiParam("Group name to search") @PathVariable String groupName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -837,12 +659,10 @@ public class SASRestController {
     @ApiOperation(value = "Get roles and their associated groups and users")
     @GetMapping(value = "/meta/roles")
     public ResponseEntity<APIResponse<List<IdentityGroup>>> getRoles(
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -857,15 +677,12 @@ public class SASRestController {
     @ApiOperation(value = "Get roles and its associated groups and users by role name")
     @GetMapping(value = "/meta/roles/{roleName}")
     public ResponseEntity<APIResponse<IdentityGroup>> getRoleByName(
-            @ApiParam("Role name to search")
-            @PathVariable String roleName,
+            @ApiParam("Role name to search") @PathVariable String roleName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -882,12 +699,10 @@ public class SASRestController {
     @ApiOperation(value = "Gets list of available Stored Process servers and their connections from metadata server")
     @GetMapping(value = "/stp")
     public ResponseEntity<APIResponse<List<ServerComponent>>> getSTPServers(
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-           licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -902,15 +717,12 @@ public class SASRestController {
     @ApiOperation(value = "Gets Stored Process server information and its connections from metadata server by name")
     @GetMapping(value = "/stp/{serverName}")
     public ResponseEntity<APIResponse<ServerComponent>> getSTPServer(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(201729, 1);
+            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -925,33 +737,24 @@ public class SASRestController {
     @ApiOperation(value = "Creates a library at given server with given library name and parameters")
     @PostMapping(value = "/servers/{serverName}/libraries/{libraryName}")
     public ResponseEntity<APIResponse<Library>> createLibrary(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Created library name, as will be used in LIBNAME statement", allowableValues = "range[1, 8]")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Created library name, as will be used in LIBNAME statement", allowableValues = "range[1, 8]") @PathVariable String libraryName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(required = false) String repositoryName,
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(required = false) String repositoryName,
 
-            @ApiParam(value = "LIBNAME engine")
-            @RequestParam String engine,
+            @ApiParam(value = "LIBNAME engine") @RequestParam String engine,
 
-            @ApiParam(value = "Library display name")
-            @RequestParam String displayName,
+            @ApiParam(value = "Library display name") @RequestParam String displayName,
 
-            @ApiParam(value = "Library data path")
-            @RequestParam String path,
+            @ApiParam(value = "Library data path") @RequestParam String path,
 
-            @ApiParam(value = "Folder to place metadata object")
-            @RequestParam String location,
+            @ApiParam(value = "Folder to place metadata object") @RequestParam String location,
 
-            @ApiParam(value = "Create preassigned library?")
-            @RequestParam boolean isPreassigned,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Create preassigned library?") @RequestParam boolean isPreassigned,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             if (libraryName == null || libraryName.length() > 8)
                 throw new ValidationException("libraryName field length must be between 1 and 8");
@@ -960,37 +763,25 @@ public class SASRestController {
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
                 val repositoriesDao = context.getBean(RepositoriesDao.class, iomConnection);
                 val repository = repositoriesDao.getRepositoryByName(repositoryName);
-                val libraryParams = LibraryParams.builder()
-                        .libRef(libraryName)
-                        .serverName(serverName)
-                        .engine(engine)
-                        .libraryName(displayName)
-                        .path(path)
-                        .location(location)
-                        .isPreassigned(isPreassigned)
-                        .build();
+                val libraryParams = LibraryParams.builder().libRef(libraryName).serverName(serverName).engine(engine)
+                        .libraryName(displayName).path(path).location(location).isPreassigned(isPreassigned).build();
                 val libraryMetadataDao = context.getBean(LibraryMetadataDao.class, iomConnection);
                 return libraryMetadataDao.createLibrary(repository.getId(), libraryParams);
             }
         });
     }
-    
 
     @ApiOperation(value = "Removes all libraries with matching library name")
     @DeleteMapping(value = "/servers/{serverName}/libraries/{libraryName}")
     public ResponseEntity<APIResponse<Object>> deleteLibrary(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Library name to match, as used in LIBNAME")
-            @PathVariable String libraryName,
+            @ApiParam(value = "Library name to match, as used in LIBNAME") @PathVariable String libraryName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -1005,35 +796,25 @@ public class SASRestController {
 
     // command endpoint
 
-    @ApiOperation(
-            value = "Gets list of available libraries for workspace server by server name",
-            notes = "Uses first available connection from connection list for supplied server name"
-    )
+    @ApiOperation(value = "Gets list of available libraries for workspace server by server name", notes = "Uses first available connection from connection list for supplied server name")
     @PutMapping(value = "/servers/{serverName}/cmd")
     public ResponseEntity<APIResponse<SASLanguageResponse>> putCommandByServer(
-            @ApiParam(value = "Server name")
-            @PathVariable String serverName,
+            @ApiParam(value = "Server name") @PathVariable String serverName,
 
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(value = "repositoryName", required = false) String repositoryName,
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
 
-            @ApiParam(value = "Enables log output in endpoint response")
-            @RequestParam(value = "logEnabled", defaultValue = "true") boolean logEnabled,
+            @ApiParam(value = "Enables log output in endpoint response") @RequestParam(value = "logEnabled", defaultValue = "true") boolean logEnabled,
 
-            @ApiParam(value = "SAS commands to submit to server")
-            @RequestBody String command,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "SAS commands to submit to server") @RequestBody String command,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
-            ConnectionProperties workspaceConnectionProps = connectionHelpers.getWorkspaceConnectionPropsByServerName(
-                    connectionProperties,
-                    serverName,
-                    repositoryName
-            );
-            try (WorkspaceConnection workspaceConnection = context.getBean(WorkspaceConnection.class, workspaceConnectionProps)) {
+            ConnectionProperties workspaceConnectionProps = connectionHelpers
+                    .getWorkspaceConnectionPropsByServerName(connectionProperties, serverName, repositoryName);
+            try (WorkspaceConnection workspaceConnection = context.getBean(WorkspaceConnection.class,
+                    workspaceConnectionProps)) {
                 return workspaceConnection.submitSasCommand(command, logEnabled);
             }
         });
@@ -1042,29 +823,22 @@ public class SASRestController {
     @ApiOperation(value = "Send a SAS command for execution to workspace server")
     @PutMapping(value = "/cmd")
     public ResponseEntity<APIResponse<SASLanguageResponse>> putCommand(
-            @ApiParam(value = "Workspace server host URL")
-            @RequestParam(value = "serverUrl", required = false) String serverUrl,
+            @ApiParam(value = "Workspace server host URL") @RequestParam(value = "serverUrl", required = false) String serverUrl,
 
-            @ApiParam(value = "Workspace server port")
-            @RequestParam(value = "serverPort", required = false) String serverPort,
+            @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
 
-            @ApiParam(value = "Enables log output in endpoint response. Doesn't populate response fields if set to 'false'")
-            @RequestParam(value = "logEnabled", defaultValue = "true") boolean logEnabled,
+            @ApiParam(value = "Enables log output in endpoint response. Doesn't populate response fields if set to 'false'") @RequestParam(value = "logEnabled", defaultValue = "true") boolean logEnabled,
 
-            @ApiParam(value = "SAS commands to submit to server")
-            @RequestBody String command,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "SAS commands to submit to server") @RequestBody String command,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
-            ConnectionProperties workspaceConnectionProps = connectionHelpers.getWorkspaceConnectionPropsByHost(
-                    connectionProperties,
-                    serverUrl,
-                    serverPort
-            );
-            try (WorkspaceConnection workspaceConnection = context.getBean(WorkspaceConnection.class, workspaceConnectionProps)) {
+            ConnectionProperties workspaceConnectionProps = connectionHelpers
+                    .getWorkspaceConnectionPropsByHost(connectionProperties, serverUrl, serverPort);
+            try (WorkspaceConnection workspaceConnection = context.getBean(WorkspaceConnection.class,
+                    workspaceConnectionProps)) {
                 return workspaceConnection.submitSasCommand(command, logEnabled);
             }
         });
@@ -1075,20 +849,14 @@ public class SASRestController {
     @ApiOperation(value = "Get object permissions")
     @GetMapping(value = "/meta/permissions")
     public ResponseEntity<APIResponse<List<Permission>>> getPermissions(
-            @ApiParam(value = "SAS metadata object type")
-            @RequestParam
-            String objectType,
+            @ApiParam(value = "SAS metadata object type") @RequestParam String objectType,
 
-            @ApiParam(value = "SAS metadata object ID")
-            @RequestParam
-            String objectId,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "SAS metadata object ID") @RequestParam String objectId, HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(17256449, 2);
+            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
-            try (val iomConnection = new  IOMConnection(connectionProperties)) {
+            try (val iomConnection = new IOMConnection(connectionProperties)) {
                 val permissionsDao = context.getBean(PermissionsDao.class, iomConnection);
                 return permissionsDao.getObjectPermissions(objectType, objectId);
             }
@@ -1099,50 +867,29 @@ public class SASRestController {
     @ApiOperation(value = "Find objects")
     @GetMapping(value = "/meta/search")
     public ResponseEntity<APIResponse<List<SASDetailedObject>>> findObjects(
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(required = false) String repositoryName,
-            @ApiParam("Search in specific folder location")
-            @RequestParam(required = false) String location,
-            @ApiParam("Search in subfolders")
-            @RequestParam(required = false) boolean locationRecursive,
-            @ApiParam("SAS Metadata object ID")
-            @RequestParam(required = false) String objectId,
-            @ApiParam("SAS Metadata object type. Omit for any object types")
-            @RequestParam(required = false) String objectType,
-            @ApiParam("Comma-separated list of target PublicType attributes")
-            @RequestParam(required = false) String publicType,
-            @ApiParam("Name matches (case-insensitive)")
-            @RequestParam(required = false) String nameEquals,
-            @ApiParam("Name starts with (case-insensitive)")
-            @RequestParam(required = false) String nameStarts,
-            @ApiParam("Name contains (case-insensitive)")
-            @RequestParam(required = false) String nameContains,
-            @ApiParam("Name matches regex")
-            @RequestParam(required = false) String nameRegex,
-            @ApiParam("Description contains (case-insensitive)")
-            @RequestParam(required = false) String descriptionContains,
-            @ApiParam("Description matches regex")
-            @RequestParam(required = false) String descriptionRegex,
-            @ApiParam("MetadataCreated greater than (ISO datatime format)")
-            @RequestParam(required = false) String createdGt,
-            @ApiParam("MetadataCreated lower than (ISO datatime format)")
-            @RequestParam(required = false) String createdLt,
-            @ApiParam("MetadataModified greater than (ISO datatime format)")
-            @RequestParam(required = false) String modifiedGt,
-            @ApiParam("MetadataModified lower than (ISO datatime format)")
-            @RequestParam(required = false) String modifiedLt,
-            @ApiParam("Libref name for associated library object for a table. For table types only.")
-            @RequestParam(required = false) String tableLibref,
-            @ApiParam("DBMS engine name for associated library object for a table. For table types only.")
-            @RequestParam(required = false) String tableDBMS,
-            @ApiParam("Include object associations?")
-            @RequestParam(required = false) boolean includeAssociations,
-            @ApiParam("Include metadata object permissions?")
-            @RequestParam(required = false) boolean includePermissions,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(required = false) String repositoryName,
+            @ApiParam("Search in specific folder location") @RequestParam(required = false) String location,
+            @ApiParam("Search in subfolders") @RequestParam(required = false) boolean locationRecursive,
+            @ApiParam("SAS Metadata object ID") @RequestParam(required = false) String objectId,
+            @ApiParam("SAS Metadata object type. Omit for any object types") @RequestParam(required = false) String objectType,
+            @ApiParam("Comma-separated list of target PublicType attributes") @RequestParam(required = false) String publicType,
+            @ApiParam("Name matches (case-insensitive)") @RequestParam(required = false) String nameEquals,
+            @ApiParam("Name starts with (case-insensitive)") @RequestParam(required = false) String nameStarts,
+            @ApiParam("Name contains (case-insensitive)") @RequestParam(required = false) String nameContains,
+            @ApiParam("Name matches regex") @RequestParam(required = false) String nameRegex,
+            @ApiParam("Description contains (case-insensitive)") @RequestParam(required = false) String descriptionContains,
+            @ApiParam("Description matches regex") @RequestParam(required = false) String descriptionRegex,
+            @ApiParam("MetadataCreated greater than (ISO datatime format)") @RequestParam(required = false) String createdGt,
+            @ApiParam("MetadataCreated lower than (ISO datatime format)") @RequestParam(required = false) String createdLt,
+            @ApiParam("MetadataModified greater than (ISO datatime format)") @RequestParam(required = false) String modifiedGt,
+            @ApiParam("MetadataModified lower than (ISO datatime format)") @RequestParam(required = false) String modifiedLt,
+            @ApiParam("Libref name for associated library object for a table. For table types only.") @RequestParam(required = false) String tableLibref,
+            @ApiParam("DBMS engine name for associated library object for a table. For table types only.") @RequestParam(required = false) String tableDBMS,
+            @ApiParam("Include object associations?") @RequestParam(required = false) boolean includeAssociations,
+            @ApiParam("Include metadata object permissions?") @RequestParam(required = false) boolean includePermissions,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(5325825, 3);
+            // licenseCheckerFacade.checkLicense(5325825, 3);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -1196,20 +943,14 @@ public class SASRestController {
     @ApiOperation(value = "Move object between folders")
     @PostMapping(value = "/meta/objects/move")
     public ResponseEntity<APIResponse<Object>> moveObject(
-            @ApiParam(value = "Source folder location")
-            @RequestParam String sourceLocation,
-            @ApiParam(value = "Source object name")
-            @RequestParam String sourceName,
-            @ApiParam(value = "Source object PublicType")
-            @RequestParam String publicType,
-            @ApiParam(value = "Destination folder location")
-            @RequestParam String destinationLocation,
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Source folder location") @RequestParam String sourceLocation,
+            @ApiParam(value = "Source object name") @RequestParam String sourceName,
+            @ApiParam(value = "Source object PublicType") @RequestParam String publicType,
+            @ApiParam(value = "Destination folder location") @RequestParam String destinationLocation,
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(5325825, 3);
+            // licenseCheckerFacade.checkLicense(5325825, 3);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -1217,7 +958,8 @@ public class SASRestController {
                 val repository = repositoriesDao.getRepositoryByName(repositoryName);
 
                 val operationsDao = context.getBean(ObjectOperationsDao.class, iomConnection);
-                operationsDao.moveObject(repository.getId(), sourceLocation, sourceName, publicType, destinationLocation);
+                operationsDao.moveObject(repository.getId(), sourceLocation, sourceName, publicType,
+                        destinationLocation);
             }
             return null;
         });
@@ -1226,18 +968,13 @@ public class SASRestController {
     @ApiOperation(value = "Delete object by folder and name")
     @PostMapping(value = "/meta/objects/delete")
     public ResponseEntity<APIResponse<Object>> deleteObject(
-            @ApiParam(value = "Folder location")
-            @RequestParam String sourceLocation,
-            @ApiParam(value = "Object name")
-            @RequestParam String sourceName,
-            @ApiParam(value = "Object PublicType")
-            @RequestParam String publicType,
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Folder location") @RequestParam String sourceLocation,
+            @ApiParam(value = "Object name") @RequestParam String sourceName,
+            @ApiParam(value = "Object PublicType") @RequestParam String publicType,
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(5325825, 3);
+            // licenseCheckerFacade.checkLicense(5325825, 3);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -1254,20 +991,14 @@ public class SASRestController {
     @ApiOperation(value = "Copy object between folders")
     @PostMapping(value = "/meta/objects/copy")
     public ResponseEntity<APIResponse<Object>> copyObject(
-            @ApiParam(value = "Source folder location")
-            @RequestParam String sourceLocation,
-            @ApiParam(value = "Source object name")
-            @RequestParam String sourceName,
-            @ApiParam(value = "Source object PublicType")
-            @RequestParam String publicType,
-            @ApiParam(value = "Destination folder location")
-            @RequestParam String destinationLocation,
-            @ApiParam(value = "Repository name", defaultValue = "Foundation")
-            @RequestParam(required = false) String repositoryName,
-            HttpServletRequest request
-    ) {
+            @ApiParam(value = "Source folder location") @RequestParam String sourceLocation,
+            @ApiParam(value = "Source object name") @RequestParam String sourceName,
+            @ApiParam(value = "Source object PublicType") @RequestParam String publicType,
+            @ApiParam(value = "Destination folder location") @RequestParam String destinationLocation,
+            @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(required = false) String repositoryName,
+            HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            licenseCheckerFacade.checkLicense(5325825, 3);
+            // licenseCheckerFacade.checkLicense(5325825, 3);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -1275,17 +1006,17 @@ public class SASRestController {
                 val repository = repositoriesDao.getRepositoryByName(repositoryName);
 
                 val operationsDao = context.getBean(ObjectOperationsDao.class, iomConnection);
-                return operationsDao.copyObject(connectionProperties, repository.getId(), sourceLocation, sourceName, publicType, destinationLocation);
+                return operationsDao.copyObject(connectionProperties, repository.getId(), sourceLocation, sourceName,
+                        publicType, destinationLocation);
             }
         });
     }
 
     //////////// License endpoint /////////////////
-    @ApiOperation(value = "Get information about active SAS Proxy license")
-    @GetMapping(value = "/license")
-    public ResponseEntity<APIResponse<List<LicenseInfo>>> getLicense() {
-        return ResponseUtils.withResponse(() ->
-                licenseCheckerFacade.getLicenseCapabilities(1147905, 1));
-    }
+    // @ApiOperation(value = "Get information about active SAS Proxy license")
+    // @GetMapping(value = "/license")
+    // public ResponseEntity<APIResponse<List<LicenseInfo>>> getLicense() {
+    // return ResponseUtils.withResponse(() ->
+    //////////// licenseCheckerFacade.getLicenseCapabilities(1147905, 1));
+    // }
 }
-
