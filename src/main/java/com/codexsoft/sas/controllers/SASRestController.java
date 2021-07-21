@@ -67,7 +67,6 @@ public class SASRestController {
     @GetMapping()
     public ResponseEntity<APIResponse<ServerConfiguration>> sasMetadataInfo(HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(1147905, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (val connection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -85,7 +84,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (val connection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -105,7 +103,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (val connection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -132,7 +129,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
@@ -150,7 +146,6 @@ public class SASRestController {
             @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
@@ -177,7 +172,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
@@ -197,7 +191,6 @@ public class SASRestController {
             @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
@@ -227,7 +220,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
@@ -247,7 +239,6 @@ public class SASRestController {
             @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
@@ -286,7 +277,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
@@ -308,7 +298,6 @@ public class SASRestController {
             @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
@@ -353,7 +342,6 @@ public class SASRestController {
             @ApiParam(value = "Dataset filter in JSON format (example: {\"Sex\": \"M\", \"Age\": 14}). Must be URL-encoded") @RequestParam(value = "filter", required = false) String filterJson,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
@@ -381,7 +369,6 @@ public class SASRestController {
             @ApiParam(value = "Dataset filter JSON") @RequestParam(value = "filter", required = false) String filterJson,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
@@ -415,7 +402,6 @@ public class SASRestController {
 
             @RequestBody List<Map<String, Object>> data, HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
@@ -440,7 +426,6 @@ public class SASRestController {
 
             @RequestBody List<Map<String, Object>> data, HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
@@ -471,7 +456,6 @@ public class SASRestController {
 
             @RequestBody List<Map<String, Object>> data, HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
@@ -494,7 +478,6 @@ public class SASRestController {
 
             @RequestBody List<Map<String, Object>> data, HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
@@ -523,7 +506,6 @@ public class SASRestController {
             @ApiParam(value = "Workspace server port") @RequestParam(value = "serverPort", required = false) String serverPort,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByHost(connectionProperties,
@@ -545,7 +527,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (JDBCConnection jdbcConnection = connectionHelpers.getJDBCConnectionByServerName(connectionProperties,
@@ -570,7 +551,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -590,7 +570,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -605,7 +584,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -622,7 +600,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -642,7 +619,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -662,7 +638,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -682,7 +657,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -702,7 +676,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -722,7 +695,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(201729, 1);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -754,7 +726,6 @@ public class SASRestController {
             @ApiParam(value = "Create preassigned library?") @RequestParam boolean isPreassigned,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             if (libraryName == null || libraryName.length() > 8)
                 throw new ValidationException("libraryName field length must be between 1 and 8");
@@ -781,7 +752,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(value = "repositoryName", required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (IOMConnection iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -808,7 +778,6 @@ public class SASRestController {
             @ApiParam(value = "SAS commands to submit to server") @RequestBody String command,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             ConnectionProperties workspaceConnectionProps = connectionHelpers
@@ -832,7 +801,6 @@ public class SASRestController {
             @ApiParam(value = "SAS commands to submit to server") @RequestBody String command,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             ConnectionProperties workspaceConnectionProps = connectionHelpers
@@ -853,7 +821,6 @@ public class SASRestController {
 
             @ApiParam(value = "SAS metadata object ID") @RequestParam String objectId, HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(17256449, 2);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = new IOMConnection(connectionProperties)) {
@@ -889,7 +856,6 @@ public class SASRestController {
             @ApiParam("Include metadata object permissions?") @RequestParam(required = false) boolean includePermissions,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(5325825, 3);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -950,7 +916,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(5325825, 3);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -974,7 +939,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(5325825, 3);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
@@ -998,7 +962,6 @@ public class SASRestController {
             @ApiParam(value = "Repository name", defaultValue = "Foundation") @RequestParam(required = false) String repositoryName,
             HttpServletRequest request) {
         return ResponseUtils.withResponse(() -> {
-            // licenseCheckerFacade.checkLicense(5325825, 3);
 
             val connectionProperties = getConnectionProperties(request);
             try (val iomConnection = context.getBean(IOMConnection.class, connectionProperties)) {
