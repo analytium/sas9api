@@ -43,4 +43,4 @@ jobs:
         with:
           name: dist-jar-file
           path: |
-            archive/sas-proxy.jar
+            target/sas-proxy.jar
