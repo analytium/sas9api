@@ -28,8 +28,8 @@ swagger:
 
 server:
   # a port to launch proxy at
-  port: 8080
-  port.http: 8082
+  port: 8443
+  port.http: 8080
   ssl:
     key-alias: selfsigned_localhost_sslserver
     key-store: classpath:localhost-ssl-keystore.p12

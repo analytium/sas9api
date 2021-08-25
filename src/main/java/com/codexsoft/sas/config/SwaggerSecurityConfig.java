@@ -10,8 +10,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class SwaggerSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/v2/api-docs").authenticated().anyRequest().permitAll().and().httpBasic()
-                .and().formLogin().disable();
+        http.requiresChannel().anyRequest().requiresSecure();
+
+        http.sessionManagement().disable();
+
+        http.httpBasic().disable().formLogin();
+        
+        http.authorizeRequests().antMatchers("/swagger-ui.html").authenticated()
+            .anyRequest().permitAll();
 
     }
 
