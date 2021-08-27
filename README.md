@@ -78,7 +78,7 @@ You can change the logging level to your exceptions in the *application.yml* fil
 
 ### Swagger UI Authentication
 
-Check the `swagger.auth` prefix based properties in the *application.yml* file.
+By default the swagger ui can be accessed via http://localhost:8080/swagger-ui.html. Optionally, it can be protected by user/passowrd configured in the *applicaiton.yml* file.
 
 Change it as you expected, eg, adding a new user `tom`, password is `tompwd`.
 
@@ -91,6 +91,8 @@ swagger:
 ```
 
 Change `swagger.auth.enabled` to `false` and bypass authenticaiton for Swagger UI.
+
+Check the `swagger.auth` prefix based properties in the *application.yml* file.
 
 
 ## ssl key store
