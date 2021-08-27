@@ -74,7 +74,9 @@ Besides explicitly showing logging info in the console, and file based log appen
 
 When debugging applications, you can check the *app.log* for the latest logging.
 
-You can change the logging level to your exceptions in the *application.yml* file, check the `logging` prefix based properties.
+You can change the logging level to your exceptions.
+
+> For more details, please check the `logging` prefix based properties in the *application.yml* file.
 
 ### Swagger UI Authentication
 
@@ -92,7 +94,7 @@ swagger:
 
 Change `swagger.auth.enabled` to `false` and bypass authenticaiton for Swagger UI.
 
-Check the `swagger.auth` prefix based properties in the *application.yml* file.
+> For more details, check the `swagger.auth` prefix based properties in the *application.yml* file.
 
 
 ## ssl key store
