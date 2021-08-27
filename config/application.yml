@@ -25,6 +25,11 @@ swagger:
   # host/port to use in Swagger interface; all request from the interface will use it
   host: user:codex123@104.198.187.78:80
   # host: localhost:8080
+  auth:
+    enabled: true
+    users:
+      user1: password
+      user2: password2
 
 server:
   # a port to launch proxy at

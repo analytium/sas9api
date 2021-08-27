@@ -50,19 +50,51 @@ To enable **debug** mode, append a `--debug` to the above command.
 java -jar target/sas-proxy.jar --debug
 ```
 
-To enable a special profile, eg. a **prod** profile for production env.
+## Configuring application
+
+By default, in this repository, the application loads a *application.yml* from the *config* folder.  
+
+You can change it as expected at deployment. Generally run the application jar with a *config/applicaiton.yml* is ok.
+
+To enable a special profile, eg. a **prod** profile for production env, create a new configuraiton name *application-prod.yml*.
 
 ```bash
 java -jar target/sas-proxy.jar -Dspring.profiles.active=prod
 ```
 
+> The profile specific properties will override the default ones at runtime.
+
+
 > Follow the 12-Factor App Principle, ideally all configurations should be part of source codes and be managed via Git in this repository, and the application can switch to different configurations via Spring profiles. In a production  env,  a special profile can be applied or set up some **environment variables**( or K8s  configMap  if using K8s) to override the default configurations.
+
+
+### Logging 
 
 Besides explicitly showing logging info in the console, and file based log appender is also enabled.
 
 When debugging applications, you can check the *app.log* for the latest logging.
 
+You can change the logging level to your exceptions in the *application.yml* file, check the `logging` prefix based properties.
+
+### Swagger UI Authentication
+
+Check the `swagger.auth` prefix based properties in the *application.yml* file.
+
+Change it as you expected, eg, adding a new user `tom`, password is `tompwd`.
+
+```yml
+swagger:
+    auth:
+        users:
+            tom: tompwd
+
+```
+
+Change `swagger.auth.enabled` to `false` and bypass authenticaiton for Swagger UI.
+
+
 ## ssl key store
+
 To list contents of the keystore locate to keystore file and type:
 
 ```bash
