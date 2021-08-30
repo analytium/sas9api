@@ -44,7 +44,7 @@ public class SasProxyApplication {
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.protocols(Collections.singleton("http"))
-				.host(swaggerHost)
+				//.host(swaggerHost)
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.codexsoft.sas.controllers"))
 				.paths(PathSelectors.any())
