@@ -1,5 +1,0 @@
-#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Sun Feb 07 02:38:31 GMT 2021
-https\://repo.spring.io/libs-release/.error=Could not transfer artifact org.apache.maven.shared\:maven-shared-utils\:pom\:3.0.1 from/to spring-releases (https\://repo.spring.io/libs-release)\: Authentication failed for https\://repo.spring.io/libs-release/org/apache/maven/shared/maven-shared-utils/3.0.1/maven-shared-utils-3.0.1.pom 401 Unauthorized
-@default-spring-releases-https\://repo.spring.io/libs-release/.lastUpdated=1612665511816
-https\://repo.maven.apache.org/maven2/.lastUpdated=1612665511828

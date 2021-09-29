@@ -4,3 +4,12 @@
 target/
 .classpath
 .project
+.project
+.classpath
+.factorypath
+.vscode
+app.log
+app.log.*
+.idea/
+*.iml
+

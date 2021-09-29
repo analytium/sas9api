@@ -4,7 +4,13 @@ endpoints:
     enabled: true
 
 logging:
+  file:
+    name: app.log
+#    path: ./logs
   level:
+    root: INFO
+    web: DEBUG
+    com.sas: DEBUG
     com.codexsoft.sas: DEBUG
 
 spring:
@@ -40,7 +46,7 @@ proxy:
   default_workspace_server_name: SASApp
   # Optional: SASApi auth methods
   apikeyEnabled: false
-  basicAuthEnabled: true
+  basicAuthEnabled: false
   # Required: a list of metadata servers and their connection details
   servers:
     - # server alias name to use in endpoints that require it
@@ -54,7 +60,7 @@ proxy:
         - # user name
           name: sasdev
           # user password
-          password: DevelopingSASSolutions
+          password: DevelopingSASSolutions1
           key: GermanySchedulingUser
         - name: sasadm
           password: DevelopingSASSolutions
@@ -69,7 +75,7 @@ proxy:
         - name: sasadm1
           password: Develop1ingSASSolutions
           key: BelgiumBatchUser
-          
+
 #DataSetData config
 datasetdata:
   max_fetch_size: 10000
