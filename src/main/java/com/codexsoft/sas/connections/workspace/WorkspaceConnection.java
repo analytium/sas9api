@@ -31,7 +31,10 @@ public class WorkspaceConnection implements AutoCloseable {
             ConnectionInterface cx = cxf.getConnection(connection.getUserName(), connection.getPassword());
             org.omg.CORBA.Object obj = cx.getObject();
             iWorkspace = IWorkspaceHelper.narrow(obj);
+
+            cx.close();
         }
+
         return iWorkspace;
     }
 
