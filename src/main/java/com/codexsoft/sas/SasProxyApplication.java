@@ -8,6 +8,7 @@ import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 @EnableSwagger2
 @EnableWebMvc
 @Import(SpringConfig.class)
+@ConfigurationPropertiesScan
 public class SasProxyApplication {
 	@Value("${swagger.host}")
 	private String swaggerHost;
@@ -42,7 +44,7 @@ public class SasProxyApplication {
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.protocols(Collections.singleton("http"))
-				.host(swaggerHost)
+				//.host(swaggerHost)
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.codexsoft.sas.controllers"))
 				.paths(PathSelectors.any())
