@@ -2,6 +2,10 @@
 
 RESTful APIs for SAS integration.
 
+## Architecture
+
+C4 architecture diagrams (system context, containers and components) and a list of known risks are in [docs/architecture](docs/architecture/README.md).
+
 ## Prerequisites
 
 * Java 8
